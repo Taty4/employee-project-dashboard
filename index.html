@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <main>
+    <main class="main">
       <div class="left-sidebar">
         <button class="btn-hide-nav">
           <svg
@@ -73,8 +73,112 @@
           <a href="#" id="nav-employees" class="nav-item">Employees</a>
         </nav>
       </div>
-      <div class="main-container"></div>
-      <div class="right-sidebar"></div>
+      <div class="main-container">
+        <div class="main-header">
+          <h1 class="title-h1">Projects</h1>
+          <div class="main-header-right-part">
+            <label for="main-search"> </label>
+            <input
+              id="main-search"
+              type="text"
+              placeholder="Search company or project..."
+            />
+            <button class="btn-add btn-add-project active">
+              + Add Project
+            </button>
+            <button class="btn-add btn-add-employee">+ Add Employee</button>
+          </div>
+        </div>
+        <div class="main-statistic">
+          <div class="card-statistic">
+            <p class="card-statistic-txt">Total Estimated Income</p>
+            <span>74020.00$</span>
+          </div>
+          <div class="card-statistic">
+            <p class="card-statistic-txt">Total Budget</p>
+            <span>74020.00$</span>
+          </div>
+          <div class="card-statistic">
+            <p class="card-statistic-txt">Projects</p>
+            <span>5</span>
+          </div>
+          <div class="card-statistic">
+            <p class="card-statistic-txt">Over Capasity</p>
+            <span>2</span>
+          </div>
+        </div>
+        <div class="main-table main-table-project active">
+          <div class="table-sroke">
+            <div class="sortable table-cell">Company Name</div>
+            <div class="sortable table-cell">Project name</div>
+            <div class="sortable table-cell">Budget</div>
+            <div class="sortable table-cell">Employee Capacity</div>
+            <div class="sortable table-cell">Employees</div>
+            <div class="sortable table-cell">Estimated Income</div>
+            <div class="table-cell">Action</div>
+          </div>
+        </div>
+        <div class="main-table main-table-employees">
+          <div class="table-sroke">
+            <div class="sortable table-cell">Name</div>
+            <div class="sortable table-cell">Surname</div>
+            <div class="sortable table-cell">Age</div>
+            <div class="sortable table-cell">Position</div>
+            <div class="sortable table-cell">Salary</div>
+            <div class="sortable table-cell">Estimated payment</div>
+            <div class="sortable table-cell">Projectt</div>
+            <div class="sortable table-cell">Project income</div>
+            <div class="table-cell">Action</div>
+          </div>
+        </div>
+      </div>
+      <div class="right-sidebar right-sidebar-projects">
+        <p class="title-right-sidebar">Add New Project</p>
+        <form id="form-project" class="form-create" action="#">
+          <label for="project-name">Project name: *</label>
+          <input
+            name="name"
+            id="project-name"
+            type="text"
+            required
+            minlength="3"
+            pattern="[A-Za-z0-9]+"
+          />
+          <label for="project-company">Company name: *</label>
+          <input
+            name="company"
+            id="project-company"
+            type="text"
+            required
+            minlength="2"
+            pattern="[A-Za-z0-9]+"
+          />
+          <label for="project-budget">Budget: *</label>
+          <input
+            name="budget"
+            id="project-budget"
+            type="number"
+            required
+            min="0"
+            step="0.01"
+          />
+          <label for="project-capacity">Employee Capacity: *</label>
+          <input
+            name="capacity"
+            id="project-capacity"
+            type="number"
+            required
+            min="1"
+            step="1"
+          />
+          <div class="container-create-project-btn">
+            <button type="submit" class="btn-submit btn-submit-project">
+              Add
+            </button>
+            <button class="btn-reset btn-reset-project">Cancel</button>
+          </div>
+        </form>
+      </div>
     </main>
     <script type="module" src="./js/main.js"></script>
   </body>
