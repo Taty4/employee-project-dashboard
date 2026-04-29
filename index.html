@@ -45,6 +45,29 @@
             />
           </svg>
         </button>
+        <button class="btn-show">
+          <svg
+            class="svg-side-bar"
+            width="22"
+            height="22"
+            viewBox="0 0 5.82 5.82"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2.91 1.06L.79 2.91l2.12 2.12"
+              fill="none"
+              stroke-width="1"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5.29 1.06L3.18 2.91l2.12 2.12"
+              fill="none"
+              stroke-width="1"
+              stroke-linejoin="round"
+              opacity=".52"
+            />
+          </svg>
+        </button>
         <p class="txt-period">Period</p>
         <div class="container-period">
           <select name="month-select" class="month-select">
@@ -52,7 +75,7 @@
             <option value="1">February</option>
             <option value="2">March</option>
             <option value="3">April</option>
-            <option value="4">May</option>
+            <option value="4" selected>May</option>
             <option value="5">June</option>
             <option value="6">July</option>
             <option value="7">August</option>
@@ -63,13 +86,13 @@
           </select>
           <select name="year-select" class="year-select">
             <option value="2025">2025</option>
-            <option value="2026">2026</option>
+            <option value="2026" selected>2026</option>
             <option value="2027">2027</option>
           </select>
           <button class="btn-seed-data">Seed Data</button>
         </div>
         <nav class="nav">
-          <a href="#" id="nav-project" class="nav-item active">Projects</a>
+          <a href="#" id="nav-projects" class="nav-item active">Projects</a>
           <a href="#" id="nav-employees" class="nav-item">Employees</a>
         </nav>
       </div>
@@ -83,7 +106,7 @@
               type="text"
               placeholder="Search company or project..."
             />
-            <button class="btn-add btn-add-project active">
+            <button class="btn-add btn-add-project visible">
               + Add Project
             </button>
             <button class="btn-add btn-add-employee">+ Add Employee</button>
@@ -92,94 +115,482 @@
         <div class="main-statistic">
           <div class="card-statistic">
             <p class="card-statistic-txt">Total Estimated Income</p>
-            <span>74020.00$</span>
+            <span class="card-statistic-total-income-span"></span>
+            <span class="bench-payment-span"></span>
           </div>
           <div class="card-statistic">
             <p class="card-statistic-txt">Total Budget</p>
-            <span>74020.00$</span>
+            <span class="card-statistic-total-budget-span"></span>
           </div>
           <div class="card-statistic">
             <p class="card-statistic-txt">Projects</p>
-            <span>5</span>
+            <span class="card-statistic-total-projects-span"></span>
           </div>
           <div class="card-statistic">
-            <p class="card-statistic-txt">Over Capasity</p>
-            <span>2</span>
+            <p class="card-statistic-txt">Employees</p>
+            <span class="card-statistic-total-employees-span"></span>
           </div>
         </div>
-        <div class="main-table main-table-project active">
-          <div class="table-sroke">
-            <div class="sortable table-cell">Company Name</div>
-            <div class="sortable table-cell">Project name</div>
-            <div class="sortable table-cell">Budget</div>
-            <div class="sortable table-cell">Employee Capacity</div>
-            <div class="sortable table-cell">Employees</div>
-            <div class="sortable table-cell">Estimated Income</div>
-            <div class="table-cell">Action</div>
-          </div>
-        </div>
-        <div class="main-table main-table-employees">
-          <div class="table-sroke">
-            <div class="sortable table-cell">Name</div>
-            <div class="sortable table-cell">Surname</div>
-            <div class="sortable table-cell">Age</div>
-            <div class="sortable table-cell">Position</div>
-            <div class="sortable table-cell">Salary</div>
-            <div class="sortable table-cell">Estimated payment</div>
-            <div class="sortable table-cell">Projectt</div>
-            <div class="sortable table-cell">Project income</div>
-            <div class="table-cell">Action</div>
-          </div>
-        </div>
+        <table class="main-table main-table-projects active">
+          <thead>
+            <tr>
+              <th class="sortable">Company Name</th>
+              <th class="sortable">Project name</th>
+              <th class="sortable">Budget</th>
+              <th class="sortable">Employee Capacity</th>
+              <th class="sortable">Employees</th>
+              <th class="sortable">Estimated Income</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="tbody-projects"></tbody>
+        </table>
+        <table class="main-table main-table-employees">
+          <thead>
+            <th class="sortable">Name</th>
+            <th class="sortable">Surname</th>
+            <th class="sortable">Age</th>
+            <th class="sortable">Position</th>
+            <th class="sortable">Salary</th>
+            <th class="sortable">Estimated payment</th>
+            <th class="sortable">Project</th>
+            <th class="sortable">Project income</th>
+            <th>Action</th>
+          </thead>
+          <tbody class="tbody-employees"></tbody>
+        </table>
       </div>
       <div class="right-sidebar right-sidebar-projects">
         <p class="title-right-sidebar">Add New Project</p>
         <form id="form-project" class="form-create" action="#">
-          <label for="project-name">Project name: *</label>
-          <input
-            name="name"
-            id="project-name"
-            type="text"
-            required
-            minlength="3"
-            pattern="[A-Za-z0-9]+"
-          />
-          <label for="project-company">Company name: *</label>
-          <input
-            name="company"
-            id="project-company"
-            type="text"
-            required
-            minlength="2"
-            pattern="[A-Za-z0-9]+"
-          />
-          <label for="project-budget">Budget: *</label>
-          <input
-            name="budget"
-            id="project-budget"
-            type="number"
-            required
-            min="0"
-            step="0.01"
-          />
-          <label for="project-capacity">Employee Capacity: *</label>
-          <input
-            name="capacity"
-            id="project-capacity"
-            type="number"
-            required
-            min="1"
-            step="1"
-          />
-          <div class="container-create-project-btn">
-            <button type="submit" class="btn-submit btn-submit-project">
+          <div class="form-field">
+            <label for="project-name">Project name: *</label>
+            <input
+              name="name"
+              id="project-name"
+              type="text"
+              required
+              minlength="3"
+              pattern="[A-Za-z0-9]+"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Project name must be at least 3 characters</span
+            >
+          </div>
+          <div class="form-field">
+            <label for="project-company">Company name: *</label>
+            <input
+              name="company"
+              id="project-company"
+              type="text"
+              required
+              minlength="2"
+              pattern="[A-Za-z0-9]+"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Company name must be at least 2 characters</span
+            >
+          </div>
+          <div class="form-field">
+            <label for="project-budget">Budget: *</label>
+            <input
+              name="budget"
+              id="project-budget"
+              type="number"
+              required
+              min="0.01"
+              step="0.01"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Budget must be greater than 0. Min 0.01.</span
+            >
+          </div>
+          <div class="form-field">
+            <label for="project-capacity">Employee Capacity: *</label>
+            <input
+              name="capacity"
+              id="project-capacity"
+              type="number"
+              required
+              min="1"
+              step="1"
+              placeholder=" "
+            />
+            <span class="form-error">Employee capacity must be at least 1</span>
+          </div>
+          <div class="container-form-create-btn">
+            <button
+              disabled
+              type="submit"
+              class="btn-form-create btn-submit btn-submit-project"
+            >
               Add
             </button>
-            <button class="btn-reset btn-reset-project">Cancel</button>
+            <button class="btn-form-create btn-reset btn-reset-project">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="right-sidebar right-sidebar-employees">
+        <p class="title-right-sidebar">Add New Employee</p>
+        <form id="form-employee" class="form-create" action="#">
+          <div class="form-field">
+            <label for="employee-name">Name: *</label>
+            <input
+              id="employee-name"
+              name="name"
+              type="text"
+              required
+              minlength="3"
+              pattern="[A-Za-z]+"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Name must be at least 3 characters and contain only letters</span
+            >
+          </div>
+          <div class="form-field">
+            <label for="employee-surname">Surname: *</label>
+            <input
+              id="employee-surname"
+              name="surname"
+              type="text"
+              required
+              minlength="3"
+              pattern="[A-Za-z]+"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Surname must be at least 3 characters and contain only
+              letters</span
+            >
+          </div>
+          <div class="form-field">
+            <label for="employee-birth">Date of birth: *</label>
+            <input
+              id="employee-birth"
+              name="dob"
+              type="date"
+              required
+              max="2008-04-19"
+            />
+            <span class="form-error">You must be at least 18 years old</span>
+          </div>
+          <div class="form-field">
+            <label for="employee-position">Position: *</label>
+            <select name="position" id="employee-position" required>
+              <option value="" disabled selected>Select position</option>
+              <option value="Junior">Junior</option>
+              <option value="Middle">Middle</option>
+              <option value="Senior">Senior</option>
+              <option value="Lead">Lead</option>
+              <option value="Architect">Architect</option>
+              <option value="BO">BO</option>
+            </select>
+            <span class="form-error">Please select a position</span>
+          </div>
+          <div class="form-field">
+            <label for="employee-salary">Salary: *</label>
+            <input
+              id="employee-salary"
+              name="salary"
+              type="number"
+              required
+              min="0.01"
+              step="0.01"
+              placeholder=" "
+            />
+            <span class="form-error"
+              >Salary must be greater than 0. Min 0.01</span
+            >
+          </div>
+          <div class="container-form-create-btn">
+            <button
+              disabled
+              type="submit"
+              class="btn-form-create btn-submit btn-submit-employee"
+            >
+              Add
+            </button>
+            <button class="btn-form-create btn-reset btn-reset-employee">
+              Cancel
+            </button>
           </div>
         </form>
       </div>
     </main>
+
+    <!-- Modal Assign -->
+    <div class="modal-overlay" id="assign-modal-overlay">
+      <div class="modal-content" id="assign-modal">
+        <div class="modal-header">
+          Assign <span class="modal-header-span accent"></span> to a project
+        </div>
+        <div class="modal-body">
+          <div class="information-block-assign">
+            <p><span>Max Total Capacity: </span><span>1.5</span></p>
+            <p>
+              <span class="other-project-current-capacity-txt"
+                >Current capacity:</span
+              >
+              <span class="other-projects-capacity-value negative-value"></span>
+            </p>
+            <p>
+              <span>
+                Available
+                <span class="info-user-avialable">for this project</span>:</span
+              >
+              <span class="avialable-capasity-value positive-value"></span>
+            </p>
+            <span class="info-for-user">(Current project not include)</span>
+          </div>
+          <span class="error error-capasity-span"
+            >An employee is already assigned to this project. Click "Show
+            assignments" to change</span
+          >
+          <select name="select-project" id="select-project">
+            <option value="" selected>Select Project</option>
+          </select>
+
+          <div class="capasity-input-section">
+            <label for="capacity-allocation"
+              >Capacity Allocation:
+              <span class="capasity-input-span">0.8</span></label
+            >
+            <input
+              id="capacity-allocation"
+              type="range"
+              min="0"
+              max="1.5"
+              step="0.1"
+            />
+            <label for="project-fit"
+              >Project Fit: <span class="fit-input-span">0.5</span></label
+            >
+            <input id="project-fit" type="range" min="0" max="1" step="0.1" />
+            <div class="project-info">
+              <div class="project-info-row">
+                <span class="info-label">Project Capacity:</span>
+                <span class="info-value used-capacity"></span>
+              </div>
+              <div class="project-info-row">
+                <span class="info-label">Effective Capacity::</span>
+                <span class="info-value effective-capacity">0.0</span>
+              </div>
+              <div class="project-info-row">
+                <span class="info-label">After Assignment:</span>
+                <span class="info-value target-capacity"> 0.0 / 4 </span>
+              </div>
+            </div>
+            <span class="error error-already-assign"
+              >Employee capacity would exceed 1.5</span
+            >
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-close-modal btn-close-modal-assign">Close</button>
+          <button class="btn-assign-modal">Assign</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Show Assogn -->
+
+    <div class="modal-overlay" id="show-assign-modal-overlay">
+      <div
+        class="modal-content show-assign-modal-content"
+        id="show-assign-modal"
+      >
+        <div class="show-modal-header">
+          <div>
+            Assignments for <span class="show-modal-header-span"></span>
+          </div>
+          <button class="btn-close-modal btn-close-modal-show-assign"></button>
+        </div>
+        <div class="modal-body modal-body-show-assign">
+          <table class="show-assigments-table">
+            <thead>
+              <th>Project</th>
+              <th>Capacity</th>
+              <th>Fit</th>
+              <th>Vacation</th>
+              <th>Effective</th>
+              <th>Revenue</th>
+              <th>Cost</th>
+              <th>Profit</th>
+              <th>Actions</th>
+            </thead>
+            <tbody class="tbody-show-assigments"></tbody>
+          </table>
+        </div>
+        <p class="no-assigments">No assignments for this employee.</p>
+      </div>
+    </div>
+
+    <!-- Modal show Employees -->
+
+    <div class="modal-overlay" id="show-emp-modal-overlay">
+      <div class="modal-content show-emp-modal-content" id="show-emp-modal">
+        <div class="show-modal-header">
+          <div>Employees on <span class="show-modal-header-span"></span></div>
+          <button class="btn-close-modal btn-close-modal-show-assign"></button>
+        </div>
+        <div class="modal-body modal-body-show-emp">
+          <table class="show-emp-table">
+            <thead>
+              <th>Employee</th>
+              <th>Capacity</th>
+              <th>Fit</th>
+              <th>Vacation</th>
+              <th>Effective</th>
+              <th>Revenue</th>
+              <th>Cost</th>
+              <th>Profit</th>
+              <th>Actions</th>
+            </thead>
+            <tbody class="tbody-show-emp"></tbody>
+          </table>
+        </div>
+        <p class="no-assigments">No employees assigned to this project.</p>
+      </div>
+    </div>
+
+    <!-- Modal Edit Assign -->
+
+    <div class="modal-overlay" id="show-edit-modal-overlay">
+      <div class="modal-content show-edit-modal-content" id="show-emp-modal">
+        <div class="show-modal-header">
+          <div>Edit Assignments</div>
+        </div>
+        <p class="show-modal-header-span p-edit-modal"></p>
+        <div class="modal-body modal-body-show-edit">
+          <div class="block-edit-input">
+            <label for="capacity-allocation"
+              >Capacity Allocation (0.0 - 1.50):
+              <span class="capasity-input-span">0.8</span></label
+            >
+            <input
+              id="capacity-allocation"
+              type="range"
+              min="0"
+              max="1.5"
+              step="0.1"
+            />
+          </div>
+
+          <div class="block-edit-input">
+            <label for="project-fit"
+              >Project Fit (0.0 - 1.00):
+              <span class="fit-input-span">0.5</span></label
+            >
+            <input id="project-fit" type="range" min="0" max="1" step="0.1" />
+          </div>
+        </div>
+        <span class="error error-too-capacity"
+          >Employee capacity would exceed 1.5 (current:
+          <span class="current-capacity-txt"></span>)</span
+        >
+        <div class="modal-footer">
+          <button class="btn-close-modal btn-close-modal-assign">Cancel</button>
+          <button class="btn-save-edit-modal">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal unAssign Assign -->
+
+    <div class="modal-overlay" id="show-unassign-modal-overlay">
+      <div
+        class="modal-content show-unassign-modal-content"
+        id="show-unassign-modal"
+      >
+        <div class="show-modal-header">
+          <p>Unassign Confirmation</p>
+        </div>
+        <p class="unassign-modal-txt">
+          You want to unassign
+          <span class="unassign-name-txt-span accent"></span> from
+          <span class="unassign-project-txt-span"></span>?
+        </p>
+        <div class="modal-body modal-body-unassign">
+          <div class="body-unassign-row">
+            <span>Assigned Capacity:</span>
+            <span class="assigned-capacity-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Employee Salary Share:</span>
+            <span class="employee-salary-share-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Budget Share:</span>
+            <span class="budget-share-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Employee Estimated Income:</span>
+            <span class="employee-estimated-income-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Current Project Capacity:</span>
+            <span class="current-project-capacity-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Capacity After Unassignment:</span>
+            <span class="capacity-after-unassignment-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Project Income Now:</span>
+            <span class="project-income-now-span"></span>
+          </div>
+          <div class="body-unassign-row">
+            <span>Project Income After:</span>
+            <span class="project-income-after-span"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-close-modal btn-close-modal-assign">Cancel</button>
+          <button class="btn-unassign-modal">Unassign</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Seed data -->
+
+    <div class="modal-overlay" id="seed-data-modal-overlay">
+      <div class="modal-content seed-data-modal-content" id="seed-data-modal">
+        <div class="show-modal-header">
+          <div>Seed Data from Month</div>
+          <button class="btn-close-modal btn-close-modal-show-assign"></button>
+        </div>
+        <div class="modal-body modal-body-seed-data">
+          <p>
+            Select a month to copy its data to the current month (<span
+              class="data-txt-span"
+              >April 2026</span
+            >):
+          </p>
+          <table class="seed-data-table">
+            <thead>
+              <th>Year</th>
+              <th>Month</th>
+              <th>Projects</th>
+              <th>Employees</th>
+              <th>Total Est. Income</th>
+              <th>Action</th>
+            </thead>
+            <tbody class="tbody-seed-data"></tbody>
+          </table>
+          <span class="no"
+            >You don't have any projects to copy yet. Click Add Project to
+            create one.</span
+          >
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="./js/main.js"></script>
   </body>
 </html>
