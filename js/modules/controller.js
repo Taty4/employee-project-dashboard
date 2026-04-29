@@ -290,6 +290,7 @@ export function initController() {
 
   const showEmployeesTable = document.querySelector(".tbody-show-emp");
   const showAssignmentsTable = document.querySelector(".tbody-show-assigments");
+  const showDataSeedTable = document.querySelector(".tbody-seed-data");
 
   showEmployeesTable.addEventListener("click", (event) => {
     if (event.target.closest(".btn-edit-assign")) {
@@ -371,6 +372,18 @@ export function initController() {
       );
 
       openModalUnAssign(employee, project);
+    }
+  });
+
+  showDataSeedTable.addEventListener("click", (event) => {
+    if (event.target.closest(".btn-action-seed-data")) {
+      const prevKey = event.target.dataset.key;
+      const currentKey = getDate();
+      store.copyMonthData(prevKey, currentKey);
+      updateUIEmployees();
+      updateUIProjects();
+      updateTotalStatistic();
+      closeModalSeedData();
     }
   });
 

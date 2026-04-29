@@ -138,6 +138,26 @@ class ManagerStore {
 
     this.saveStore();
   }
+
+  copyMonthData(prevKey, currentKey) {
+    const store = this.data;
+    if (!store[currentKey]) {
+      store[currentKey] = {};
+      store[currentKey].projects = [];
+      store[currentKey].employees = [];
+    }
+
+    const currentDateProjects = store[currentKey].projects;
+    const prevDateProjects = store[prevKey].projects;
+
+    const currentDateEmployees = store[currentKey].employees;
+    const prevDateEmployees = store[prevKey].employees;
+
+    currentDateProjects.push(...structuredClone(prevDateProjects));
+    currentDateEmployees.push(...structuredClone(prevDateEmployees));
+
+    this.saveStore();
+  }
 }
 
 export const store = new ManagerStore();

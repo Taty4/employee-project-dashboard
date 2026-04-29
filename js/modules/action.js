@@ -3,6 +3,7 @@ import { updateShowAssignModal } from "./ui.js";
 import { updateShowEmpModal } from "./ui.js";
 import { updateModalEditAssign } from "./ui.js";
 import { updateModalUnAssign } from "./ui.js";
+import { updateModalSeedData } from "./ui.js";
 
 export function getDate() {
   const inputSelectMonth = document.querySelector(".month-select");
@@ -181,10 +182,10 @@ export function calculateBudgetEmployee(employee) {
   };
 }
 
-export function calculateBudgetProject(project) {
+export function calculateBudgetProject(project, date) {
   let projectIncome = 0;
 
-  const employees = store.data[getDate()].employees;
+  const employees = store.data[date].employees;
   const hasEmployees = employees.find((employee) =>
     employee.assignments.find((ass) => ass.idProject === project.id),
   );
@@ -236,7 +237,7 @@ export function closeModalUnAssign() {
 
 export function openModalSeedData() {
   const showModalDataSeed = document.getElementById("seed-data-modal-overlay");
-
+  updateModalSeedData();
   showModalDataSeed.classList.add("open");
 }
 

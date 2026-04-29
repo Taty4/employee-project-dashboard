@@ -489,13 +489,15 @@ select:invalid + .form-error {
 }
 
 .btn-show-assign,
-.btn-show-emp {
+.btn-show-emp,
+.btn-action-seed-data {
   color: var(--font-color);
   background-color: var(--accent-dark-color);
 }
 
 .btn-show-assign:hover,
-.btn-show-emp:hover {
+.btn-show-emp:hover,
+.btn-action-seed-data:hover {
   background-color: var(--accent-dark-color-hover);
 }
 
@@ -919,4 +921,21 @@ input[type="range"] {
 
 .seed-data-table {
   margin-top: 15px;
+}
+
+.no-data-to-copy {
+  margin-top: 15px;
+  display: none;
+}
+
+.no-data-to-copy.visible {
+  display: block;
+}
+
+.seed-data-table.hidden {
+  display: none;
+}
+
+.info-user-select-month-tx.hidden {
+  display: none;
 }

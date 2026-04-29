@@ -6,7 +6,7 @@ import { calculateBudgetProject } from "./action.js";
 import { calculationOfCapacity } from "./action.js";
 
 let totalIncome = 0;
-let benchPayment;
+let benchPayment = 0;
 export function updateUIProjects() {
   const tableProjectsBody = document.querySelector(".tbody-projects");
   if (
@@ -23,7 +23,7 @@ export function updateUIProjects() {
   const projects = store.data[getDate()].projects;
 
   projects.forEach((project) => {
-    const data = calculateBudgetProject(project);
+    const data = calculateBudgetProject(project, getDate());
 
     const newStroke = document.createElement("tr");
     for (let i = 0; i < 7; i++) {
@@ -425,4 +425,74 @@ export function updateModalUnAssign(employee, project, modal) {
     `${capacityAfterUnAssign}`;
   modal.querySelector(".project-income-now-span").textContent = "Hello";
   modal.querySelector(".project-income-after-span").textContent = "Hello";
+}
+
+export function updateModalSeedData() {
+  const year = getDate().slice(0, 4);
+  const month = new Date(year, getDate().slice(5)).toLocaleString("en-US", {
+    month: "long",
+  });
+
+  document.querySelector(".data-txt-span").textContent = `${month} ${year}`;
+
+  const tbody = document.querySelector(".tbody-seed-data");
+  tbody.replaceChildren();
+  const filledKeys = Object.entries(store.data).filter(
+    ([key, value]) =>
+      (value.projects.length !== 0 || value.employees.length !== 0) &&
+      key !== getDate(),
+  );
+
+  document
+    .querySelector(".no-data-to-copy")
+    .classList.toggle("visible", filledKeys.length === 0);
+  document
+    .querySelector(".seed-data-table")
+    .classList.toggle("hidden", filledKeys.length === 0);
+  document
+    .querySelector(".info-user-select-month-tx")
+    .classList.toggle("hidden", filledKeys.length === 0);
+
+  filledKeys.forEach(([key, value]) => {
+    const year = key.slice(0, 4);
+    const month = new Date(year, key.slice(5)).toLocaleString("en-US", {
+      month: "long",
+    });
+
+    const numberOfProjects = value.projects.length;
+    const numberOfEmloyees = value.employees.length;
+    let totalDateIncomming = 0;
+    value.projects.forEach((project) => {
+      const projectBudget = calculateBudgetProject(project, key);
+      totalDateIncomming += +projectBudget.projectIncome;
+    });
+
+    const tr = document.createElement("tr");
+    for (let i = 0; i < 6; i++) {
+      const td = document.createElement("td");
+      if (i === 0) {
+        td.textContent = `${year}`;
+      } else if (i === 1) {
+        td.textContent = `${month}`;
+      } else if (i === 2) {
+        td.textContent = `${numberOfProjects}`;
+      } else if (i === 3) {
+        td.textContent = `${numberOfEmloyees}`;
+      } else if (i === 4) {
+        td.textContent = `$${totalDateIncomming}`;
+      } else if (i === 5) {
+        const btnSeedData = document.createElement("button");
+
+        btnSeedData.className = "btn-action btn-action-seed-data";
+        btnSeedData.dataset.key = key;
+        btnSeedData.textContent = "Seed Data";
+
+        td.append(btnSeedData);
+      }
+
+      tr.append(td);
+    }
+
+    tbody.append(tr);
+  });
 }
