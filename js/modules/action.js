@@ -4,6 +4,7 @@ import { updateShowEmpModal } from "./ui.js";
 import { updateModalEditAssign } from "./ui.js";
 import { updateModalUnAssign } from "./ui.js";
 import { updateModalSeedData } from "./ui.js";
+import { updateModalVacations } from "./ui.js";
 
 export function getDate() {
   const inputSelectMonth = document.querySelector(".month-select");
@@ -51,27 +52,41 @@ export function closeShowAssignModal() {
   showAssignModalOverlay.dataset.idEmployee = "";
 }
 
-export function calculateEffectiveСapacity() {
-  const capacity = document.getElementById("capacity-allocation").value;
-  const fit = document.getElementById("project-fit").value;
-  return (capacity * fit).toFixed(2);
+export function calculateEffectiveСapacity(capacity, fit, employee) {
+  const workigDays = getWorkingDays();
+  let vacationWorkingday = 0;
+  if (employee.vacations) {
+    vacationWorkingday = employee.vacations.length;
+  }
+  const vacationCoefficient = (workigDays - vacationWorkingday) / workigDays;
+  return capacity * fit * vacationCoefficient;
 }
 
 export function getCurrentProjectCapasity(idProject) {
   let totalCapacity = 0;
+  let vacationWorkingdays = 0;
   const data = store.data;
   const employees = data[getDate()].employees;
   if (employees.length !== 0) {
     employees.forEach((employee) => {
+      const workigDays = getWorkingDays();
+      if (employee.vacations) {
+        vacationWorkingdays = employee.vacations.length;
+      }
+
+      const vacationCoefficient =
+        (workigDays - vacationWorkingdays) / workigDays;
+
       const assignments = employee.assignments;
       assignments.forEach((item) => {
         if (item.idProject === idProject) {
-          totalCapacity += Number(item.capacity) * Number(item.fit);
+          totalCapacity +=
+            Number(item.capacity) * Number(item.fit) * vacationCoefficient;
         }
       });
     });
   }
-  return totalCapacity.toFixed(2);
+  return totalCapacity;
 }
 
 // ===============
@@ -131,7 +146,6 @@ export function calculationOfCapacity(employee, idProject) {
     data.availableForSelectionCapacity = (1.5 - currentCapacity).toFixed(2);
   }
 
-  console.log(data);
   return data;
 }
 
@@ -139,9 +153,18 @@ export function calculateBudgetEmployee(employee) {
   let estimatedPayment = 0;
   let projectedIncome = 0;
   let totalCapasity = 0;
-  let benchPayment = 0;
+  let benchPayment = 0; /* Не факт что оно нужно именно здесь */
+  let vacationWorkingdays = 0;
 
-  if (employee.assignments.length === 0) {
+  const workigDays = getWorkingDays();
+
+  if (employee.vacations) {
+    vacationWorkingdays = employee.vacations.length;
+  }
+
+  const vacationCoefficient = (workigDays - vacationWorkingdays) / workigDays;
+
+  if (!employee.assignments || employee.assignments.length === 0) {
     estimatedPayment = +employee.salary * 0.5;
     projectedIncome = projectedIncome - estimatedPayment;
     benchPayment += estimatedPayment;
@@ -156,7 +179,8 @@ export function calculateBudgetEmployee(employee) {
       const revenue = (
         (project.budget / project.employeeCapacity) *
         assign.capacity *
-        assign.fit
+        assign.fit *
+        vacationCoefficient
       ).toFixed(2);
 
       const cost = employee.salary * Math.max(0.5, assign.capacity);
@@ -167,18 +191,12 @@ export function calculateBudgetEmployee(employee) {
     });
 
     estimatedPayment = Math.max(0.5, totalCapasity) * +employee.salary;
-    console.log(estimatedPayment);
   }
-  console.log({
+  return {
     estimatedPayment: estimatedPayment,
     projectedIncome: projectedIncome,
     totalCapasity: totalCapasity,
-  });
-  return {
-    estimatedPayment: estimatedPayment.toFixed(2),
-    projectedIncome: projectedIncome.toFixed(2),
-    totalCapasity: totalCapasity,
-    benchPayment: benchPayment.toFixed(2),
+    benchPayment: benchPayment,
   };
 }
 
@@ -196,13 +214,25 @@ export function calculateBudgetProject(project, date) {
         const assign = emp.assignments.find(
           (assign) => assign.idProject === project.id,
         );
+
+        const workigDays = getWorkingDays();
+        let vacationWorkingdays = 0;
+
+        if (emp.vacations) {
+          vacationWorkingdays = emp.vacations.length;
+        }
+
+        const vacationCoefficient =
+          (workigDays - vacationWorkingdays) / workigDays;
+
         const revenue = (
           (project.budget / project.employeeCapacity) *
           assign.capacity *
-          assign.fit
+          assign.fit *
+          vacationCoefficient
         ).toFixed(2);
 
-        const cost = (emp.salary * Math.max(0.5, assign.capacity)).toFixed(2);
+        const cost = emp.salary * Math.max(0.5, assign.capacity);
 
         const profit = revenue - cost;
         projectIncome += profit;
@@ -211,7 +241,7 @@ export function calculateBudgetProject(project, date) {
   }
 
   return {
-    projectIncome: projectIncome.toFixed(2),
+    projectIncome: projectIncome,
     hasEmployees: hasEmployees,
   };
 }
@@ -244,4 +274,39 @@ export function openModalSeedData() {
 export function closeModalSeedData() {
   const showModalDataSeed = document.getElementById("seed-data-modal-overlay");
   showModalDataSeed.classList.remove("open");
+}
+
+export function openModalVacations(idEmployee) {
+  const modalOverlay = document.getElementById("modal-overlay-vacations");
+  modalOverlay.dataset.idEmployee = idEmployee;
+  updateModalVacations(idEmployee);
+  modalOverlay.classList.add("open");
+}
+
+export function closeModalVacations() {
+  const modalOverlay = document.getElementById("modal-overlay-vacations");
+  modalOverlay.classList.remove("open");
+}
+
+export function getWorkingDays() {
+  const currentDate = getDate();
+
+  const currentYear = +currentDate.slice(0, 4);
+  const currentMonth = +currentDate.slice(5);
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  let workingDays = 0;
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(currentYear, currentMonth, day);
+
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+    if (!isWeekend) {
+      workingDays++;
+    }
+  }
+
+  return workingDays;
 }

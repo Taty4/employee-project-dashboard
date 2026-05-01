@@ -4,23 +4,20 @@ import { store } from "./state.js";
 import { calculateBudgetEmployee } from "./action.js";
 import { calculateBudgetProject } from "./action.js";
 import { calculationOfCapacity } from "./action.js";
+import { getWorkingDays } from "./action.js";
+import { calculateEffectiveСapacity } from "./action.js";
 
 let totalIncome = 0;
 let benchPayment = 0;
-export function updateUIProjects() {
+
+export function updateUIProjects(projects) {
   const tableProjectsBody = document.querySelector(".tbody-projects");
-  if (
-    !store.data[getDate()] ||
-    !store.data[getDate()].projects ||
-    !store.data[getDate()].projects.length === 0
-  ) {
+  if (projects.length === 0) {
     tableProjectsBody.replaceChildren();
     return;
   }
 
   tableProjectsBody.replaceChildren();
-
-  const projects = store.data[getDate()].projects;
 
   projects.forEach((project) => {
     const data = calculateBudgetProject(project, getDate());
@@ -29,13 +26,13 @@ export function updateUIProjects() {
     for (let i = 0; i < 7; i++) {
       const newCell = document.createElement("td");
       if (i === 0) {
-        newCell.textContent = `${project.projectName}`;
-      } else if (i === 1) {
         newCell.textContent = `${project.companyName}`;
+      } else if (i === 1) {
+        newCell.textContent = `${project.projectName}`;
       } else if (i === 2) {
         newCell.textContent = `$${project.budget}`;
       } else if (i === 3) {
-        newCell.textContent = `${getCurrentProjectCapasity(project.id)} / ${project.employeeCapacity}`;
+        newCell.textContent = `${getCurrentProjectCapasity(project.id).toFixed(2)} / ${project.employeeCapacity}`;
       } else if (i === 4) {
         if (data.hasEmployees) {
           const btnShowEmp = document.createElement("button");
@@ -45,12 +42,12 @@ export function updateUIProjects() {
           newCell.append(btnShowEmp);
         }
       } else if (i === 5) {
-        if (+data.projectIncome < 0) {
+        if (data.projectIncome < 0) {
           newCell.className = "negative-value";
         } else {
           newCell.className = "positive-value";
         }
-        newCell.textContent = `$${data.projectIncome}`;
+        newCell.textContent = `$${data.projectIncome.toFixed(2)}`;
       } else if (i === 6) {
         const btnDelete = document.createElement("button");
         btnDelete.className = "btn-action btn-delete";
@@ -64,19 +61,18 @@ export function updateUIProjects() {
   });
 }
 
-export function updateUIEmployees() {
+const positions = ["Junior", "Middle", "Senior", "Lead", "Architect", "BO"];
+
+export function updateUIEmployees(employees) {
   const tableEmployeesBody = document.querySelector(".tbody-employees");
-  if (
-    !store.data[getDate()] ||
-    !store.data[getDate()].employees ||
-    !store.data[getDate()].employees.length === 0
-  ) {
+
+  if (employees.length === 0) {
     tableEmployeesBody.replaceChildren();
     return;
   }
 
   tableEmployeesBody.replaceChildren();
-  const employees = store.data[getDate()].employees;
+
   totalIncome = 0;
   benchPayment = 0;
   employees.forEach((employee) => {
@@ -86,8 +82,8 @@ export function updateUIEmployees() {
     let currentCapacity = 0;
     employee.assignments.forEach((item) => (currentCapacity += +item.capacity));
 
-    benchPayment += +data.benchPayment;
-    totalIncome += +data.projectedIncome;
+    benchPayment += data.benchPayment;
+    totalIncome += data.projectedIncome;
     for (let i = 0; i < 9; i++) {
       const newCell = document.createElement("td");
 
@@ -98,11 +94,41 @@ export function updateUIEmployees() {
       } else if (i === 2) {
         newCell.textContent = `${employee.age}`;
       } else if (i === 3) {
-        newCell.textContent = `${employee.position}`;
+        newCell.className = "editable-position";
+        newCell.dataset.field = "position";
+        newCell.dataset.idEmployee = employee.id;
+        const span = document.createElement("span");
+        span.className = "span-txt-cell";
+        span.textContent = `${employee.position}`;
+        const select = document.createElement("select");
+        select.className = "form-edit";
+        for (let i = 0; i < positions.length; i++) {
+          const option = document.createElement("option");
+          option.textContent = positions[i];
+          option.value = positions[i];
+          if (positions[i] === employee.position) {
+            option.selected = true;
+          }
+          select.append(option);
+        }
+        newCell.append(span, select);
       } else if (i === 4) {
-        newCell.textContent = `$${employee.salary}`;
+        newCell.className = "editable-salary";
+        newCell.dataset.field = "salary";
+        newCell.dataset.idEmployee = employee.id;
+        const span = document.createElement("span");
+        span.className = "span-txt-cell";
+        span.textContent = `$${employee.salary}`;
+        const input = document.createElement("input");
+        input.className = "form-edit";
+        input.type = "number";
+        input.min = "0.01";
+        input.step = "0.01";
+        input.value = employee.salary;
+
+        newCell.append(span, input);
       } else if (i === 5) {
-        newCell.textContent = `$${data.estimatedPayment}`;
+        newCell.textContent = `$${data.estimatedPayment.toFixed(2)}`;
       } else if (i === 6 && employee.assignments.length !== 0) {
         const btnShowAssignments = document.createElement("button");
         btnShowAssignments.dataset.id = employee.id;
@@ -111,12 +137,12 @@ export function updateUIEmployees() {
 
         newCell.append(btnShowAssignments);
       } else if (i === 7) {
-        if (+data.projectedIncome < 0) {
+        if (data.projectedIncome < 0) {
           newCell.className = "negative-value";
         } else {
           newCell.className = "positive-value";
         }
-        newCell.textContent = `$${data.projectedIncome}`;
+        newCell.textContent = `$${data.projectedIncome.toFixed(2)}`;
       } else if (i === 8) {
         const btnDelete = document.createElement("button");
         btnDelete.className = "btn-action btn-delete";
@@ -131,7 +157,7 @@ export function updateUIEmployees() {
 
         const btnAvailability = document.createElement("button");
         btnAvailability.className = "btn-action btn-availability";
-        btnAvailability.dataset.id = employee.id;
+        btnAvailability.dataset.idEmployee = employee.id;
         btnAvailability.textContent = "Availability";
 
         newCell.append(btnAvailability);
@@ -183,7 +209,7 @@ export function updateShowAssignModal(employee, modal) {
   const tbody = modal.querySelector(".tbody-show-assigments");
   tbody.replaceChildren();
 
-  if (employee.assignments.length === 0) {
+  if (employee.assignments.length === 0 || !employee.assignments) {
     modal.querySelector(".no-assigments").classList.add("open");
     return;
   }
@@ -197,13 +223,23 @@ export function updateShowAssignModal(employee, modal) {
       (item) => item.id === idProject,
     );
 
-    const revenue = (
+    const workigDays = getWorkingDays();
+    let vacationWorkingDays = 0;
+
+    if (employee.vacations) {
+      vacationWorkingDays = employee.vacations.length;
+    }
+    const vacationCoefficient = (workigDays - vacationWorkingDays) / workigDays;
+
+    const revenue =
       (project.budget / project.employeeCapacity) *
       assign.capacity *
-      assign.fit
-    ).toFixed(2);
+      assign.fit *
+      vacationCoefficient;
 
-    const cost = (employee.salary * Math.max(0.5, assign.capacity)).toFixed(2);
+    const cost = employee.salary * Math.max(0.5, assign.capacity);
+
+    const profit = revenue - cost;
 
     const tr = document.createElement("tr");
     for (let i = 0; i < 9; i++) {
@@ -215,15 +251,15 @@ export function updateShowAssignModal(employee, modal) {
       } else if (i === 2) {
         td.textContent = `${assign.fit}`;
       } else if (i === 3) {
-        td.textContent = "-";
+        td.textContent = `${vacationWorkingDays} days`;
       } else if (i === 4) {
-        td.textContent = `${(assign.capacity * assign.fit).toFixed(2)}`;
+        td.textContent = `${(assign.capacity * assign.fit * vacationCoefficient).toFixed(2)}`;
       } else if (i === 5) {
-        td.textContent = `${revenue}`;
+        td.textContent = `$${revenue.toFixed(2)}`;
       } else if (i === 6) {
-        td.textContent = `${cost}`;
+        td.textContent = `$${cost.toFixed(2)}`;
       } else if (i === 7) {
-        td.textContent = `${revenue - cost}`;
+        td.textContent = `$${profit.toFixed(2)}`;
       } else if (i === 8) {
         const btnEdit = document.createElement("button");
         btnEdit.className = "btn-action btn-edit-assign";
@@ -272,16 +308,28 @@ export function updateShowEmpModal(project, modal) {
       const assign = employee.assignments.find(
         (assign) => assign.idProject === project.id,
       );
-      const revenue = (
-        (project.budget / project.employeeCapacity) *
-        assign.capacity *
-        assign.fit
-      ).toFixed(2);
 
-      const cost = (employee.salary * Math.max(0.5, assign.capacity)).toFixed(
-        2,
+      const workigDays = getWorkingDays();
+
+      let vacationWorkingDays = 0;
+
+      if (employee.vacations) {
+        vacationWorkingDays = employee.vacations.length;
+      }
+      const vacationCoefficient =
+        (workigDays - vacationWorkingDays) / workigDays;
+
+      const effectiveCapacity = calculateEffectiveСapacity(
+        assign.capacity,
+        assign.fit,
+        employee,
       );
 
+      const revenue =
+        (project.budget / project.employeeCapacity) * effectiveCapacity;
+
+      const cost = employee.salary * Math.max(0.5, assign.capacity);
+      const profit = revenue - cost;
       const tr = document.createElement("tr");
       for (let i = 0; i < 9; i++) {
         const td = document.createElement("td");
@@ -292,15 +340,15 @@ export function updateShowEmpModal(project, modal) {
         } else if (i === 2) {
           td.textContent = `${assign.fit}`;
         } else if (i === 3) {
-          td.textContent = "-";
+          td.textContent = `${vacationWorkingDays} days`;
         } else if (i === 4) {
-          td.textContent = `${(assign.capacity * assign.fit).toFixed(2)}`;
+          td.textContent = `${effectiveCapacity.toFixed(2)}`;
         } else if (i === 5) {
-          td.textContent = `${revenue}`;
+          td.textContent = `$${revenue.toFixed(2)}`;
         } else if (i === 6) {
-          td.textContent = `${cost}`;
+          td.textContent = `$${cost.toFixed()}`;
         } else if (i === 7) {
-          td.textContent = `${revenue - cost}`;
+          td.textContent = `$${profit.toFixed(2)}`;
         } else if (i === 8) {
           const btnEdit = document.createElement("button");
           btnEdit.className = "btn-action btn-edit-assign";
@@ -328,6 +376,14 @@ export function updateShowEmpModal(project, modal) {
 export function updateModalEditAssign(employee, project, modal) {
   modal.querySelector(".show-modal-header-span").textContent =
     `${employee.name} ${employee.surname} on ${project.projectName}`;
+
+  const capacity = calculationOfCapacity(employee, project.id);
+  console.log(capacity.currentCapacityEmployee);
+  modal.querySelector(".other-projects-capacity-value").textContent =
+    `${(1.5 - +capacity.availableForSelectionCapacity).toFixed(2)}`;
+
+  modal.querySelector(".avialable-capasity-value").textContent =
+    `${capacity.availableForSelectionCapacity}`;
 }
 
 export function updateTotalStatistic() {
@@ -366,11 +422,11 @@ export function updateTotalStatistic() {
     cardTotalIncome.classList.remove("negative-value");
   }
 
-  cardTotalIncome.textContent = `$${totalIncome}`;
+  cardTotalIncome.textContent = `$${totalIncome.toFixed(2)}`;
   cardTotalProjects.textContent = `${totalProjects}`;
   cardTotalEmployees.textContent = `${totalEmployees}`;
   document.querySelector(".bench-payment-span").textContent =
-    `(Bench payment $${benchPayment})`;
+    `(Bench payment $${benchPayment.toFixed(2)})`;
 }
 
 // Modal unAssign
@@ -386,33 +442,43 @@ export function updateModalUnAssign(employee, project, modal) {
     (assign) => assign.idProject === project.id,
   );
 
-  const employeePayment = (
-    employee.salary * Math.max(0.5, +assign.capacity)
-  ).toFixed(2);
+  const employeePayment = employee.salary * Math.max(0.5, +assign.capacity);
+  let vacationWorkingdays = 0;
 
-  const revenue = (
-    (project.budget / project.employeeCapacity) *
-    assign.capacity *
-    assign.fit
-  ).toFixed(2);
+  const workigDays = getWorkingDays();
+
+  if (employee.vacations) {
+    vacationWorkingdays = employee.vacations.length;
+  }
+
+  const vacationCoefficient = (workigDays - vacationWorkingdays) / workigDays;
+
+  const effectiveCapacity = calculateEffectiveСapacity(
+    assign.capacity,
+    assign.fit,
+    employee,
+  );
+
+  const revenue =
+    (project.budget / project.employeeCapacity) * effectiveCapacity;
+
+  const profit = revenue - employeePayment;
 
   const currentProjectCapacity = getCurrentProjectCapasity(project.id);
-  const capacityAfterUnAssign = (
-    +currentProjectCapacity -
-    +assign.capacity * +assign.fit
-  ).toFixed(2);
+  const capacityAfterUnAssign = currentProjectCapacity - effectiveCapacity;
 
   modal.querySelector(".assigned-capacity-span").textContent =
     `${assign.capacity}`;
 
   modal.querySelector(".employee-salary-share-span").textContent =
-    `$${employeePayment}`;
-  modal.querySelector(".budget-share-span").textContent = `$${revenue}`;
+    `$${employeePayment.toFixed(2)}`;
+  modal.querySelector(".budget-share-span").textContent =
+    `$${revenue.toFixed(2)}`;
   const employeeEstimatedIncomeSpan = modal.querySelector(
     ".employee-estimated-income-span",
   );
-  employeeEstimatedIncomeSpan.textContent = `$${revenue - employeePayment}`;
-  if (revenue - employeePayment >= 0) {
+  employeeEstimatedIncomeSpan.textContent = `$${profit.toFixed(2)}`;
+  if (profit >= 0) {
     employeeEstimatedIncomeSpan.classList.remove("negative-value");
     employeeEstimatedIncomeSpan.classList.add("positive-value");
   } else {
@@ -420,9 +486,9 @@ export function updateModalUnAssign(employee, project, modal) {
     employeeEstimatedIncomeSpan.classList.remove("positive-value");
   }
   modal.querySelector(".current-project-capacity-span").textContent =
-    `${currentProjectCapacity}`;
+    `${currentProjectCapacity.toFixed(2)}`;
   modal.querySelector(".capacity-after-unassignment-span").textContent =
-    `${capacityAfterUnAssign}`;
+    `${capacityAfterUnAssign.toFixed(2)}`;
   modal.querySelector(".project-income-now-span").textContent = "Hello";
   modal.querySelector(".project-income-after-span").textContent = "Hello";
 }
@@ -464,7 +530,7 @@ export function updateModalSeedData() {
     let totalDateIncomming = 0;
     value.projects.forEach((project) => {
       const projectBudget = calculateBudgetProject(project, key);
-      totalDateIncomming += +projectBudget.projectIncome;
+      totalDateIncomming += projectBudget.projectIncome;
     });
 
     const tr = document.createElement("tr");
@@ -479,7 +545,7 @@ export function updateModalSeedData() {
       } else if (i === 3) {
         td.textContent = `${numberOfEmloyees}`;
       } else if (i === 4) {
-        td.textContent = `$${totalDateIncomming}`;
+        td.textContent = `$${totalDateIncomming.toFixed(2)}`;
       } else if (i === 5) {
         const btnSeedData = document.createElement("button");
 
@@ -495,4 +561,115 @@ export function updateModalSeedData() {
 
     tbody.append(tr);
   });
+}
+
+export function updateModalVacations(idEmployee) {
+  const gridCalendar = document.querySelector(".grid-calendar");
+  gridCalendar.replaceChildren();
+
+  const currentDate = getDate();
+
+  const currentYear = +currentDate.slice(0, 4);
+  const currentMonth = +currentDate.slice(5);
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const normalized = firstDay === 0 ? 6 : firstDay - 1;
+
+  const employee = store.data[currentDate].employees.find(
+    (emp) => emp.id === idEmployee,
+  );
+
+  for (let i = 0; i < normalized; i++) {
+    const gridCell = document.createElement("div");
+    gridCell.className = "calendar-day";
+    gridCalendar.append(gridCell);
+  }
+
+  let workingDays = 0;
+  let vacationWorkigDays = 0;
+
+  for (let i = 1; i <= daysInMonth; i++) {
+    const gridCell = document.createElement("div");
+    gridCell.className = "calendar-day";
+    gridCell.dataset.day = i;
+    gridCell.textContent = i;
+
+    const date = new Date(currentYear, currentMonth, i);
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+    if (isWeekend) {
+      gridCell.classList.add("weekend");
+    } else {
+      gridCell.classList.add("availability");
+      workingDays++;
+    }
+
+    if (employee.vacations && employee.vacations.includes(String(i))) {
+      gridCell.classList.add("selected");
+      vacationWorkigDays++;
+    }
+
+    gridCalendar.append(gridCell);
+  }
+
+  const month = new Date(currentYear, currentMonth).toLocaleString("en-US", {
+    month: "long",
+  });
+
+  document.querySelector(".vacations-current-date").textContent =
+    `${currentYear} ${month}`;
+  document.querySelector(".count-working-day-span").textContent =
+    `${workingDays - vacationWorkigDays} / ${workingDays}`;
+  document.querySelector(".vacations-txt-span").textContent =
+    `${formatVacationsDays(employee.vacations, currentMonth)}`;
+}
+
+export function formatVacationsDays(vacations, month) {
+  if (!vacations || vacations.length === 0) return "";
+
+  const sorted = [...vacations].map(Number).sort((a, b) => a - b);
+
+  const ranges = [];
+  let start = sorted[0];
+
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] !== sorted[i - 1] + 1) {
+      if (start === sorted[i - 1]) {
+        ranges.push(`${String(start).padStart(2, "0")}.${month}`);
+      } else {
+        ranges.push(
+          `${String(start).padStart(2, "0")}.${month}-${String(sorted[i - 1]).padStart(2, "0")}.${month}`,
+        );
+      }
+      start = sorted[i];
+    }
+  }
+
+  if (start === sorted[sorted.length - 1]) {
+    ranges.push(`${String(start).padStart(2, "0")}.${month}`);
+  } else {
+    ranges.push(
+      `${String(start).padStart(2, "0")}.${month}-${String(sorted[sorted.length - 1]).padStart(2, "0")}.${month}`,
+    );
+  }
+
+  return ranges.join(", ");
+}
+
+export function updateUI() {
+  const monthData = getMonthData();
+
+  updateUIProjects(monthData.projects);
+  updateUIEmployees(monthData.employees);
+  updateTotalStatistic();
+}
+
+export function getMonthData() {
+  const month = store.data[getDate()];
+
+  return {
+    employees: month?.employees ?? [],
+    projects: month?.projects ?? [],
+  };
 }

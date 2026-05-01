@@ -304,6 +304,7 @@ button:disabled {
   margin-bottom: 10px;
   margin-top: 30px;
   color: var(--dark-color);
+  font-size: 14px;
   border: 1px solid var(--dark-color-opasity);
 }
 
@@ -320,9 +321,61 @@ button:disabled {
   display: block;
 }
 
+.editable-salary,
+.editable-position {
+  position: relative;
+  cursor: pointer;
+}
+
+.editable-salary::after,
+.editable-position::after {
+  content: "";
+  display: block;
+  opacity: 0;
+  width: 15px;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-image: url(../src/png/pencil.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  transition: 0.3s;
+}
+
+.editable-salary:hover::after,
+.editable-position:hover::after {
+  opacity: 1;
+}
+
+.editable-salary .form-edit {
+  max-width: 80px;
+}
+
+.form-edit {
+  width: 90%;
+  padding: 3px 5px;
+  display: none;
+}
+
+.editable-position.open .form-edit,
+.editable-salary.open .form-edit {
+  display: block;
+}
+
+.editable-position.open .span-txt-cell,
+.editable-salary.open .span-txt-cell,
+.editable-salary.open::after,
+.editable-position.open::after {
+  display: none;
+}
+
 th {
   padding: 10px;
   background-color: var(--accent-color);
+  position: relative;
   color: var(--font-color);
   transition: 0.3s;
   text-align: left;
@@ -333,7 +386,29 @@ th.sortable {
 }
 
 th.sortable:hover {
-  background-color: var(--dark-color-opasity);
+  background-color: var(--accent-dark-color);
+}
+
+th.sortable::after {
+  content: "↿⇂";
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -2.5px;
+}
+
+th.sortable.asc::after {
+  content: "↾";
+}
+
+th.sortable.desc::after {
+  content: "⇃";
 }
 
 td {
@@ -736,6 +811,10 @@ input[type="range"] {
   font-size: 12px;
 }
 
+.error.visible {
+  display: block;
+}
+
 /* Modal Show Assign */
 
 .show-modal-header {
@@ -938,4 +1017,70 @@ input[type="range"] {
 
 .info-user-select-month-tx.hidden {
   display: none;
+}
+
+/* Modal vacations */
+
+.vacations-current-date {
+  text-align: center;
+  padding: 10px;
+}
+
+.grid-calendar,
+.grid-calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  color: var(--dark-color);
+}
+
+.grid-calendar-header {
+  margin-bottom: 5px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 700;
+  padding: 7px 5px;
+  background-color: var(--accent-color);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.calendar-day {
+  padding: 7px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.calendar-day.availability {
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.calendar-day.weekend {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.calendar-day.availability:hover {
+  background-color: var(--accent-color);
+}
+
+.calendar-day.selected {
+  background-color: var(--accent-color);
+}
+
+.block-working-day {
+  padding: 10px;
+}
+
+.block-working-day {
+  text-align: center;
+}
+
+.modal-vacations-footer {
+  display: flex;
+  justify-content: space-between;
 }

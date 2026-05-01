@@ -132,29 +132,35 @@
           </div>
         </div>
         <table class="main-table main-table-projects active">
-          <thead>
+          <thead class="thead-projects">
             <tr>
-              <th class="sortable">Company Name</th>
-              <th class="sortable">Project name</th>
-              <th class="sortable">Budget</th>
-              <th class="sortable">Employee Capacity</th>
-              <th class="sortable">Employees</th>
-              <th class="sortable">Estimated Income</th>
+              <th class="sortable" data-sort="companyName">Company Name</th>
+              <th class="sortable" data-sort="projectName">Project name</th>
+              <th class="sortable" data-sort="budget">Budget</th>
+              <th class="sortable" data-sort="employeeCapacity">
+                Employee Capacity
+              </th>
+              <th>Employees</th>
+              <th class="sortable" data-sort="estimatedIncome">
+                Estimated Income
+              </th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody class="tbody-projects"></tbody>
         </table>
         <table class="main-table main-table-employees">
-          <thead>
-            <th class="sortable">Name</th>
-            <th class="sortable">Surname</th>
-            <th class="sortable">Age</th>
-            <th class="sortable">Position</th>
-            <th class="sortable">Salary</th>
-            <th class="sortable">Estimated payment</th>
-            <th class="sortable">Project</th>
-            <th class="sortable">Project income</th>
+          <thead class="thead-employees">
+            <th class="sortable" data-sort="name">Name</th>
+            <th class="sortable" data-sort="surname">Surname</th>
+            <th class="sortable" data-sort="age">Age</th>
+            <th class="sortable" data-sort="position">Position</th>
+            <th class="sortable" data-sort="salary">Salary</th>
+            <th class="sortable" data-sort="estimatedPayment">
+              Estimated payment
+            </th>
+            <th>Project</th>
+            <th class="sortable" data-sort="projectIncome">Project income</th>
             <th>Action</th>
           </thead>
           <tbody class="tbody-employees"></tbody>
@@ -386,7 +392,7 @@
                 <span class="info-value target-capacity"> 0.0 / 4 </span>
               </div>
             </div>
-            <span class="error error-already-assign"
+            <span class="error error-over-capacity"
               >Employee capacity would exceed 1.5</span
             >
           </div>
@@ -468,6 +474,19 @@
         </div>
         <p class="show-modal-header-span p-edit-modal"></p>
         <div class="modal-body modal-body-show-edit">
+          <div class="information-block-assign">
+            <p><span>Max Total Capacity: </span><span>1.5</span></p>
+            <p>
+              <span class="other-project-current-capacity-txt"
+                >Capacity on other projects:
+              </span>
+              <span class="other-projects-capacity-value negative-value"></span>
+            </p>
+            <p>
+              <span> Available for this project:</span>
+              <span class="avialable-capasity-value positive-value"></span>
+            </p>
+          </div>
           <div class="block-edit-input">
             <label for="capacity-allocation"
               >Capacity Allocation (0.0 - 1.50):
@@ -587,6 +606,46 @@
             You don't have data from other months yet. Click Add Project to
             create one.</span
           >
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Vacations -->
+
+    <div class="modal-overlay" id="modal-overlay-vacations">
+      <div
+        class="modal-content vacations-data-modal-content"
+        id="vacations-modal"
+      >
+        <div class="show-modal-header">
+          <p>
+            Tatyana<span class="vacations-header-name"></span> - Availability
+          </p>
+          <button class="btn-close-modal btn-close-modal-vacations"></button>
+        </div>
+        <p class="vacations-current-date">May 2026</p>
+        <div class="modal-body modal-body-vacations">
+          <div class="grid-calendar-header">
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+            <div class="calendar-day-header">Sun</div>
+          </div>
+          <div class="grid-calendar"></div>
+          <div class="block-working-day">
+            <p>
+              Working days:
+              <span class="count-working-day-span accent">22 / 22</span> days
+            </p>
+          </div>
+          <div class="modal-vacations-footer">
+            <p>Vcations day:</p>
+            <span class="vacations-txt-span"></span>
+            <button class="btn-set-vacations">Set vacations</button>
+          </div>
         </div>
       </div>
     </div>

@@ -147,15 +147,57 @@ class ManagerStore {
       store[currentKey].employees = [];
     }
 
+    const copyPrevProjects = structuredClone(store[prevKey].projects);
+
+    const projectsId = new Map();
+
+    copyPrevProjects.forEach((project) => {
+      const newId = crypto.randomUUID();
+
+      projectsId.set(project.id, newId);
+      project.id = newId;
+    });
+
+    const copyPrevEmployees = structuredClone(store[prevKey].employees);
+
+    copyPrevEmployees.forEach((employee) => {
+      employee.id = crypto.randomUUID();
+
+      if (employee.assignments) {
+        employee.assignments.forEach((assign) => {
+          assign.idProject = projectsId.get(assign.idProject);
+        });
+      }
+
+      if (employee.vacations) {
+        delete employee.vacations;
+      }
+    });
+
     const currentDateProjects = store[currentKey].projects;
-    const prevDateProjects = store[prevKey].projects;
-
     const currentDateEmployees = store[currentKey].employees;
-    const prevDateEmployees = store[prevKey].employees;
 
-    currentDateProjects.push(...structuredClone(prevDateProjects));
-    currentDateEmployees.push(...structuredClone(prevDateEmployees));
+    currentDateProjects.push(copyPrevProjects);
+    currentDateEmployees.push(copyPrevEmployees);
 
+    this.saveStore();
+  }
+
+  addVacations(date, idEmployee, days) {
+    const store = this.data;
+    const employee = store[date].employees.find((emp) => emp.id === idEmployee);
+    if (!employee.vacations) {
+      employee.vacations = [];
+    }
+
+    employee.vacations = [...days];
+    this.saveStore();
+  }
+
+  editProperty(idEmployee, property, value, date) {
+    const store = this.data;
+    const employee = store[date].employees.find((emp) => emp.id === idEmployee);
+    employee[property] = value;
     this.saveStore();
   }
 }
