@@ -57,6 +57,9 @@ export function initController() {
   const btnAddProject = document.querySelector(".btn-add-project");
   const btnAddEmployee = document.querySelector(".btn-add-employee");
 
+  const btnFilterProjects = document.querySelector(".btn-filter-projects");
+  const btnFilterEmployees = document.querySelector(".btn-filter-employees");
+
   const rightSideBarProject = document.querySelector(".right-sidebar-projects");
   const rightSideBarEmployees = document.querySelector(
     ".right-sidebar-employees",
@@ -67,6 +70,8 @@ export function initController() {
 
   navProjects.addEventListener("click", () => {
     navProjects.classList.add("active");
+    document.querySelector(".info-about-projects-txt").textContent =
+      "Overview of all projects and key metrics";
     navEmployees.classList.remove("active");
     rightSideBarEmployees.classList.remove("open");
     btnAddEmployee.classList.remove("visible");
@@ -74,18 +79,388 @@ export function initController() {
     title.textContent = "Projects";
     tableEmployees.classList.remove("active");
     tableProjects.classList.add("active");
+    btnFilterProjects.classList.add("visible");
+    btnFilterEmployees.classList.remove("visible");
+    closeFormSearch();
   });
 
   navEmployees.addEventListener("click", () => {
     navEmployees.classList.add("active");
     navProjects.classList.remove("active");
+    document.querySelector(".info-about-projects-txt").textContent =
+      "Overview of all employees and key metrics";
     rightSideBarProject.classList.remove("open");
     btnAddProject.classList.remove("visible");
     btnAddEmployee.classList.add("visible");
     title.textContent = "Employees";
     tableProjects.classList.remove("active");
     tableEmployees.classList.add("active");
+    btnFilterProjects.classList.remove("visible");
+    btnFilterEmployees.classList.add("visible");
+    closeFormSearch();
   });
+
+  const formSearchProjects = document.querySelector(".form-search-projects");
+  const formSearchEmployees = document.querySelector(".form-search-employees");
+
+  btnFilterProjects.addEventListener("click", () => {
+    formSearchProjects.querySelectorAll("input, select").forEach((input) => {
+      input.classList.remove("hidden");
+    });
+
+    formSearchProjects.classList.toggle(
+      "open",
+      !formSearchProjects.classList.contains("open"),
+    );
+  });
+
+  btnFilterEmployees.addEventListener("click", () => {
+    formSearchEmployees.querySelectorAll("input, select").forEach((input) => {
+      input.classList.remove("hidden");
+    });
+
+    formSearchEmployees.classList.toggle(
+      "open",
+      !formSearchEmployees.classList.contains("open"),
+    );
+  });
+
+  formSearchEmployees.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-cancel-search")) {
+      event.preventDefault();
+      closeFormSearch(event.target);
+      updateUI();
+    }
+  });
+
+  formSearchProjects.addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-cancel-search")) {
+      event.preventDefault();
+      closeFormSearch(event.target);
+      updateUI();
+    }
+  });
+
+  const filtersState = new Map([
+    [formSearchProjects, {}],
+    [formSearchEmployees, {}],
+  ]);
+
+  function getRowField(row) {
+    const input = row.querySelector("input, select");
+    return row.dataset.field || input?.id || input?.name || "unknown";
+  }
+
+  // ---------- MAIN RENDER ----------
+  function render(form) {
+    renderChips(form);
+    renderAddButton(form);
+  }
+
+  function handleSearchSubmit(form, event) {
+    event.preventDefault();
+
+    const rows = form.querySelectorAll(".row-search");
+    const state = filtersState.get(form);
+
+    rows.forEach((row) => {
+      const field = getRowField(row);
+      const input = row.querySelector("input, select");
+      const value = input?.value.trim();
+
+      if (value) {
+        state[field] = value;
+      } else {
+        delete state[field];
+      }
+    });
+
+    const hasFilters = Object.keys(state).length > 0;
+    form.dataset.compact = hasFilters ? "true" : "false";
+    if (!hasFilters) {
+      form.querySelectorAll("input, select").forEach((fieldInput) => {
+        fieldInput.classList.remove("hidden");
+      });
+    }
+
+    render(form);
+  }
+
+  formSearchProjects.addEventListener("submit", (event) => {
+    handleSearchSubmit(formSearchProjects, event);
+
+    // Получить активные фильтры
+    const filters = filtersState.get(formSearchProjects);
+
+    // Получить данные за месяц
+    const monthData = getMonthData();
+
+    // Отфильтровать проекты
+    const filtered = monthData.projects.filter((project) => {
+      if (
+        filters["company-name"] &&
+        !project.companyName
+          .toLowerCase()
+          .includes(filters["company-name"].toLowerCase())
+      ) {
+        return false;
+      }
+
+      if (
+        filters["project-name"] &&
+        !project.projectName
+          .toLowerCase()
+          .includes(filters["project-name"].toLowerCase())
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    // Отобразить отфильтрованные данные
+    updateUIProjects(filtered);
+  });
+
+  formSearchEmployees.addEventListener("submit", (event) => {
+    handleSearchSubmit(formSearchEmployees, event);
+
+    const filters = filtersState.get(formSearchEmployees);
+    const monthData = getMonthData();
+
+    const filtered = monthData.employees.filter((employee) => {
+      if (
+        filters["name"] &&
+        !employee.name.toLowerCase().includes(filters["name"].toLowerCase())
+      ) {
+        return false;
+      }
+
+      if (
+        filters["surname"] &&
+        !employee.surname
+          .toLowerCase()
+          .includes(filters["surname"].toLowerCase())
+      ) {
+        return false;
+      }
+
+      if (filters["position"] && employee.position !== filters["position"]) {
+        return false;
+      }
+
+      if (filters["projects"]) {
+        const hasProject = employee.assignments.some((assignment) => {
+          const project = store.data[getDate()]?.projects?.find(
+            (p) => p.id === assignment.idProject,
+          );
+          return (
+            project &&
+            project.projectName
+              .toLowerCase()
+              .includes(filters["projects"].toLowerCase())
+          );
+        });
+
+        if (!hasProject) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    updateUIEmployees(filtered);
+  });
+
+  function applyFiltersForForm(form) {
+    const filters = filtersState.get(form);
+    const monthData = getMonthData();
+
+    if (form === formSearchProjects) {
+      const filtered = monthData.projects.filter((project) => {
+        if (
+          filters["company-name"] &&
+          !project.companyName
+            .toLowerCase()
+            .includes(filters["company-name"].toLowerCase())
+        ) {
+          return false;
+        }
+
+        if (
+          filters["project-name"] &&
+          !project.projectName
+            .toLowerCase()
+            .includes(filters["project-name"].toLowerCase())
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+
+      updateUIProjects(filtered);
+      return;
+    }
+
+    if (form === formSearchEmployees) {
+      const filtered = monthData.employees.filter((employee) => {
+        if (
+          filters["name"] &&
+          !employee.name.toLowerCase().includes(filters["name"].toLowerCase())
+        ) {
+          return false;
+        }
+
+        if (
+          filters["surname"] &&
+          !employee.surname
+            .toLowerCase()
+            .includes(filters["surname"].toLowerCase())
+        ) {
+          return false;
+        }
+
+        if (filters["position"] && employee.position !== filters["position"]) {
+          return false;
+        }
+
+        if (filters["projects"]) {
+          const hasProject = employee.assignments.some((assignment) => {
+            const project = store.data[getDate()]?.projects?.find(
+              (p) => p.id === assignment.idProject,
+            );
+            return (
+              project &&
+              project.projectName
+                .toLowerCase()
+                .includes(filters["projects"].toLowerCase())
+            );
+          });
+
+          if (!hasProject) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      updateUIEmployees(filtered);
+    }
+  }
+
+  // ---------- CHIPS ----------
+  function renderChips(form) {
+    const rows = form.querySelectorAll(".row-search");
+
+    rows.forEach((row) => {
+      const input = row.querySelector("input, select");
+
+      row.querySelector(".chip")?.remove();
+
+      const field = getRowField(row);
+      const state = filtersState.get(form);
+      const value = state[field];
+      const label = input?.placeholder || input?.name || input?.id || field;
+
+      if (value) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = `${label}: ${value}`;
+
+        const remove = document.createElement("span");
+        remove.textContent = " ⨯";
+
+        remove.onclick = (event) => {
+          event.stopPropagation();
+          const state = filtersState.get(form);
+          delete state[field];
+
+          const hasFilters = Object.keys(state).length > 0;
+          if (!hasFilters) {
+            form.reset();
+            form.dataset.compact = "false";
+            form.querySelectorAll("input, select").forEach((fieldInput) => {
+              fieldInput.classList.remove("hidden");
+            });
+          }
+
+          render(form);
+          applyFiltersForForm(form);
+        };
+
+        chip.appendChild(remove);
+        chip.onclick = () => {
+          form.dataset.compact = "false";
+          form.querySelectorAll("input, select").forEach((fieldInput) => {
+            fieldInput.classList.remove("hidden");
+          });
+          form
+            .querySelectorAll(".chip")
+            .forEach((chipItem) => chipItem.remove());
+          renderAddButton(form);
+        };
+        row.appendChild(chip);
+
+        input.classList.add("hidden");
+      } else {
+        if (form.dataset.compact === "true") {
+          input.classList.add("hidden");
+        } else {
+          input.classList.remove("hidden");
+        }
+      }
+    });
+  }
+
+  // ---------- ADD BUTTON ----------
+  function renderAddButton(form) {
+    const container = form.querySelector(".container-inputs-search");
+
+    let btn = form.querySelector(".btn-add-filter");
+
+    const inputs = [...form.querySelectorAll("input, select")];
+    const hasHiddenInputs = inputs.some((i) => i.classList.contains("hidden"));
+
+    if (!btn && hasHiddenInputs) {
+      btn = document.createElement("button");
+      btn.className = "btn-add-filter";
+      btn.textContent = "Change";
+
+      btn.onclick = (e) => {
+        e.preventDefault();
+
+        form.dataset.compact = "false";
+        inputs.forEach((input) => {
+          input.classList.remove("hidden");
+        });
+        inputs[0]?.focus();
+        form.querySelectorAll(".chip").forEach((chipItem) => chipItem.remove());
+        renderAddButton(form);
+      };
+
+      container.appendChild(btn);
+    }
+
+    if (btn && !hasHiddenInputs) {
+      btn.remove();
+    }
+  }
+
+  // ---------- INIT ----------
+  render(formSearchProjects);
+  render(formSearchEmployees);
+
+  function closeFormSearch() {
+    document.querySelectorAll(".form-search").forEach((form) => {
+      form.reset();
+      form.classList.remove("open");
+    });
+  }
+
+  // ============================
 
   // Правая панель контроллы
 
@@ -122,7 +497,6 @@ export function initController() {
     event.preventDefault();
     const formData = new FormData(formProject);
     const data = Object.fromEntries(formData);
-    console.log(data);
     const project = new Project(data);
     store.addProject(getDate(), project);
     formProject.reset();
@@ -719,10 +1093,10 @@ export function initController() {
   };
 
   projectsTableHeader.addEventListener("click", (e) => {
-    const column = e.target.dataset.sort;
+    const target = e.target.closest(".sortable");
 
-    if (!column) return;
-
+    if (!target) return;
+    const column = target.dataset.sort;
     if (projectsSortState.column === column) {
       projectsSortState.direction =
         projectsSortState.direction === "asc" ? "desc" : "asc";
@@ -735,7 +1109,7 @@ export function initController() {
       el.classList.remove("asc", "desc");
     });
 
-    e.target.classList.add(
+    target.classList.add(
       projectsSortState.direction === "asc" ? "asc" : "desc",
     );
 
@@ -780,9 +1154,10 @@ export function initController() {
   };
 
   employeesTableHeader.addEventListener("click", (e) => {
-    const column = e.target.dataset.sort;
+    const target = e.target.closest(".sortable");
 
-    if (!column) return;
+    if (!target) return;
+    const column = target.dataset.sort;
 
     if (employeesSortState.column === column) {
       employeesSortState.direction =
@@ -796,7 +1171,7 @@ export function initController() {
       el.classList.remove("asc", "desc");
     });
 
-    e.target.classList.add(
+    target.classList.add(
       employeesSortState.direction === "asc" ? "asc" : "desc",
     );
 

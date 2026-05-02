@@ -15,6 +15,7 @@ export function getDate() {
 }
 
 export function closeAssignModal() {
+  document.body.classList.remove("no-scroll");
   const assignModalOverlay = document.getElementById("assign-modal-overlay");
   assignModalOverlay.classList.remove("open");
   const capacityInputSection = document.querySelector(
@@ -26,7 +27,7 @@ export function closeAssignModal() {
 
 export function openAssignModal(employee) {
   if (!employee) return;
-
+  document.body.classList.add("no-scroll");
   const assignModalOverlay = document.getElementById("assign-modal-overlay");
   assignModalOverlay.dataset.idEmployee = employee.id;
   assignModalOverlay.classList.add("open");
@@ -34,7 +35,7 @@ export function openAssignModal(employee) {
 
 export function openShowAssignModal(employee) {
   if (!employee) return;
-
+  document.body.classList.add("no-scroll");
   const showAssignModalOverlay = document.getElementById(
     "show-assign-modal-overlay",
   );
@@ -45,6 +46,7 @@ export function openShowAssignModal(employee) {
 }
 
 export function closeShowAssignModal() {
+  document.body.classList.remove("no-scroll");
   const showAssignModalOverlay = document.getElementById(
     "show-assign-modal-overlay",
   );
@@ -92,7 +94,7 @@ export function getCurrentProjectCapasity(idProject) {
 // ===============
 export function openShowEmpModal(project) {
   if (!project) return;
-
+  document.body.classList.add("no-scroll");
   const showEmpModalOverlay = document.getElementById("show-emp-modal-overlay");
   showEmpModalOverlay.dataset.idProject = project.id;
   updateShowEmpModal(project, showEmpModalOverlay);
@@ -100,12 +102,15 @@ export function openShowEmpModal(project) {
 }
 
 export function closeShowEmpModal() {
+  document.body.classList.remove("no-scroll");
   const showEmpModalOverlay = document.getElementById("show-emp-modal-overlay");
   showEmpModalOverlay.classList.remove("open");
 }
 
 export function openModalEditAssign(employee, project) {
   if (!employee || !project) return;
+
+  document.body.classList.add("no-scroll");
   const showEditModalOverlay = document.getElementById(
     "show-edit-modal-overlay",
   );
@@ -153,7 +158,7 @@ export function calculateBudgetEmployee(employee) {
   let estimatedPayment = 0;
   let projectedIncome = 0;
   let totalCapasity = 0;
-  let benchPayment = 0; /* Не факт что оно нужно именно здесь */
+  let benchPayment = 0;
   let vacationWorkingdays = 0;
 
   const workigDays = getWorkingDays();
@@ -202,6 +207,7 @@ export function calculateBudgetEmployee(employee) {
 
 export function calculateBudgetProject(project, date) {
   let projectIncome = 0;
+  let countAssignments = 0;
 
   const employees = store.data[date].employees;
   const hasEmployees = employees.find((employee) =>
@@ -211,6 +217,7 @@ export function calculateBudgetProject(project, date) {
   if (hasEmployees) {
     employees.forEach((emp) => {
       if (emp.assignments.find((assign) => assign.idProject === project.id)) {
+        countAssignments++;
         const assign = emp.assignments.find(
           (assign) => assign.idProject === project.id,
         );
@@ -242,6 +249,7 @@ export function calculateBudgetProject(project, date) {
 
   return {
     projectIncome: projectIncome,
+    numberOfAssignments: countAssignments,
     hasEmployees: hasEmployees,
   };
 }
@@ -249,6 +257,7 @@ export function calculateBudgetProject(project, date) {
 // =====================
 export function openModalUnAssign(employee, project) {
   if (!employee || !project) return;
+  document.body.classList.add("no-scroll");
   const showUnAssigntModalOverlay = document.getElementById(
     "show-unassign-modal-overlay",
   );
@@ -266,17 +275,20 @@ export function closeModalUnAssign() {
 }
 
 export function openModalSeedData() {
+  document.body.classList.add("no-scroll");
   const showModalDataSeed = document.getElementById("seed-data-modal-overlay");
   updateModalSeedData();
   showModalDataSeed.classList.add("open");
 }
 
 export function closeModalSeedData() {
+  document.body.classList.remove("no-scroll");
   const showModalDataSeed = document.getElementById("seed-data-modal-overlay");
   showModalDataSeed.classList.remove("open");
 }
 
 export function openModalVacations(idEmployee) {
+  document.body.classList.add("no-scroll");
   const modalOverlay = document.getElementById("modal-overlay-vacations");
   modalOverlay.dataset.idEmployee = idEmployee;
   updateModalVacations(idEmployee);
@@ -284,6 +296,7 @@ export function openModalVacations(idEmployee) {
 }
 
 export function closeModalVacations() {
+  document.body.classList.remove("no-scroll");
   const modalOverlay = document.getElementById("modal-overlay-vacations");
   modalOverlay.classList.remove("open");
 }

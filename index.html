@@ -7,105 +7,152 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <main class="main">
-      <div class="left-sidebar">
-        <button class="btn-hide-nav">
-          <svg
-            class="svg-home"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 460.298 460.297"
-          >
-            <path
-              d="M230.149 120.939 65.986 256.274c0 .191-.048.472-.144.855-.094.38-.144.656-.144.852v137.041c0 4.948 1.809 9.236 5.426 12.847 3.616 3.613 7.898 5.431 12.847 5.431h109.63V303.664h73.097v109.64h109.629c4.948 0 9.236-1.814 12.847-5.435 3.617-3.607 5.432-7.898 5.432-12.847V257.981c0-.76-.104-1.334-.288-1.707L230.149 120.939z"
-            />
-            <path
-              d="M457.122 225.438 394.6 173.476V56.989c0-2.663-.856-4.853-2.574-6.567-1.704-1.712-3.894-2.568-6.563-2.568h-54.816c-2.666 0-4.855.856-6.57 2.568-1.711 1.714-2.566 3.905-2.566 6.567v55.673l-69.662-58.245c-6.084-4.949-13.318-7.423-21.694-7.423-8.375 0-15.608 2.474-21.698 7.423L3.172 225.438c-1.903 1.52-2.946 3.566-3.14 6.136-.193 2.568.472 4.811 1.997 6.713l17.701 21.128c1.525 1.712 3.521 2.759 5.996 3.142 2.285.192 4.57-.476 6.855-1.998L230.149 95.817l197.57 164.741c1.526 1.328 3.521 1.991 5.996 1.991h.858c2.471-.376 4.463-1.43 5.996-3.138l17.703-21.125c1.522-1.906 2.189-4.145 1.991-6.716-.194-2.563-1.241-4.609-3.14-6.132z"
-            />
-          </svg>
-          Dashboard
-          <svg
-            class="svg-side-bar"
-            width="22"
-            height="22"
-            viewBox="0 0 5.82 5.82"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M2.91 1.06L.79 2.91l2.12 2.12"
-              fill="none"
-              stroke-width="1"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M5.29 1.06L3.18 2.91l2.12 2.12"
-              fill="none"
-              stroke-width="1"
-              stroke-linejoin="round"
-              opacity=".52"
-            />
-          </svg>
-        </button>
-        <button class="btn-show">
-          <svg
-            class="svg-side-bar"
-            width="22"
-            height="22"
-            viewBox="0 0 5.82 5.82"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M2.91 1.06L.79 2.91l2.12 2.12"
-              fill="none"
-              stroke-width="1"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M5.29 1.06L3.18 2.91l2.12 2.12"
-              fill="none"
-              stroke-width="1"
-              stroke-linejoin="round"
-              opacity=".52"
-            />
-          </svg>
-        </button>
-        <p class="txt-period">Period</p>
-        <div class="container-period">
-          <select name="month-select" class="month-select">
-            <option value="0">January</option>
-            <option value="1">February</option>
-            <option value="2">March</option>
-            <option value="3">April</option>
-            <option value="4" selected>May</option>
-            <option value="5">June</option>
-            <option value="6">July</option>
-            <option value="7">August</option>
-            <option value="8">September</option>
-            <option value="9">October</option>
-            <option value="10">November</option>
-            <option value="11">December</option>
-          </select>
-          <select name="year-select" class="year-select">
-            <option value="2025">2025</option>
-            <option value="2026" selected>2026</option>
-            <option value="2027">2027</option>
-          </select>
-          <button class="btn-seed-data">Seed Data</button>
-        </div>
-        <nav class="nav">
-          <a href="#" id="nav-projects" class="nav-item active">Projects</a>
-          <a href="#" id="nav-employees" class="nav-item">Employees</a>
-        </nav>
+    <div class="left-sidebar">
+      <button class="btn-hide-nav">
+        <svg
+          class="svg-home"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 460.298 460.297"
+        >
+          <path
+            d="M230.149 120.939 65.986 256.274c0 .191-.048.472-.144.855-.094.38-.144.656-.144.852v137.041c0 4.948 1.809 9.236 5.426 12.847 3.616 3.613 7.898 5.431 12.847 5.431h109.63V303.664h73.097v109.64h109.629c4.948 0 9.236-1.814 12.847-5.435 3.617-3.607 5.432-7.898 5.432-12.847V257.981c0-.76-.104-1.334-.288-1.707L230.149 120.939z"
+          />
+          <path
+            d="M457.122 225.438 394.6 173.476V56.989c0-2.663-.856-4.853-2.574-6.567-1.704-1.712-3.894-2.568-6.563-2.568h-54.816c-2.666 0-4.855.856-6.57 2.568-1.711 1.714-2.566 3.905-2.566 6.567v55.673l-69.662-58.245c-6.084-4.949-13.318-7.423-21.694-7.423-8.375 0-15.608 2.474-21.698 7.423L3.172 225.438c-1.903 1.52-2.946 3.566-3.14 6.136-.193 2.568.472 4.811 1.997 6.713l17.701 21.128c1.525 1.712 3.521 2.759 5.996 3.142 2.285.192 4.57-.476 6.855-1.998L230.149 95.817l197.57 164.741c1.526 1.328 3.521 1.991 5.996 1.991h.858c2.471-.376 4.463-1.43 5.996-3.138l17.703-21.125c1.522-1.906 2.189-4.145 1.991-6.716-.194-2.563-1.241-4.609-3.14-6.132z"
+          />
+        </svg>
+        Dashboard
+        <svg
+          class="svg-side-bar"
+          width="22"
+          height="22"
+          viewBox="0 0 5.82 5.82"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.91 1.06L.79 2.91l2.12 2.12"
+            fill="none"
+            stroke-width="1"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M5.29 1.06L3.18 2.91l2.12 2.12"
+            fill="none"
+            stroke-width="1"
+            stroke-linejoin="round"
+            opacity=".52"
+          />
+        </svg>
+      </button>
+
+      <p class="txt-period">Period</p>
+      <div class="container-period">
+        <select name="month-select" class="month-select">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4" selected>May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
+        </select>
+        <select name="year-select" class="year-select">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+          <option value="2027">2027</option>
+        </select>
+        <button class="btn-seed-data">Seed Data</button>
       </div>
+      <nav class="nav">
+        <a href="#" id="nav-projects" class="nav-item active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style="
+              width: 25px;
+              height: 25px;
+              transform-origin: 50% 50%;
+              transform: scaleX(1) scaleY(1) rotate(0deg);
+            "
+            viewBox="0 0 32 32"
+          >
+            <defs></defs>
+            <g id="Layer_39" data-name="Layer 39">
+              <path
+                d="M4 28a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h7a1 1 0 0 1 .77.36L14.8 8H27a1 1 0 0 1 0 2H14.33a1 1 0 0 1-.76-.36L10.53 6H4a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1 1 1 0 0 1 0 2"
+                class="cls-1"
+              />
+              <path
+                d="M25.38 28H4a1 1 0 0 1-1-1.21l3-14A1 1 0 0 1 7 12h23a1 1 0 0 1 1 1.21l-2.68 12.42A3 3 0 0 1 25.38 28M5.24 26h20.14a1 1 0 0 0 1-.79L28.76 14h-21Z"
+                class="cls-1"
+              />
+            </g>
+          </svg>
+          Projects</a
+        >
+        <a href="#" id="nav-employees" class="nav-item">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xml:space="preserve"
+            style="
+              width: 25px;
+              height: 25px;
+              transform-origin: 50% 50%;
+              transform: scaleX(1) scaleY(1) rotate(0deg);
+            "
+            viewBox="0 0 86 86"
+          >
+            <g>
+              <path
+                d="M71.2 51.2C74.1 48.8 76 45.1 76 41c0-6.9-5.6-13-12-13s-12 6.1-12 13c0 4.1 1.9 7.8 4.8 10.2-1.3.5-2.5 1-3.7 1.7-3.8-4.5-8.8-8-14.6-9.7C42.9 40.1 46 34.8 46 29c0-9.1-7.5-17-16-17s-16 7.9-16 17c0 5.8 3.1 11.1 7.5 14.2C9.1 46.9 0 58.4 0 72c0 1.1.9 2 2 2h82c1.1 0 2-.9 2-2 0-9.6-6.2-17.8-14.8-20.8M56 41c0-4.2 3.5-9 8-9s8 4.8 8 9-3.5 9-8 9-8-4.8-8-9M18 29c0-6.1 5.1-13 12-13s12 6.9 12 13-5.1 13-12 13-12-6.9-12-13M4.1 70c1-13.4 12.3-24 25.9-24 13.7 0 24.9 10.6 25.9 24zm55.8 0c-.3-5-1.9-9.8-4.5-13.8C58 54.8 60.9 54 64 54c9.3 0 16.9 7 17.9 16z"
+              />
+            </g>
+          </svg>
+          Employees</a
+        >
+      </nav>
+    </div>
+    <button class="btn-show">
+      <svg
+        class="svg-side-bar"
+        width="22"
+        height="22"
+        viewBox="0 0 5.82 5.82"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M2.91 1.06L.79 2.91l2.12 2.12"
+          fill="none"
+          stroke-width="1"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M5.29 1.06L3.18 2.91l2.12 2.12"
+          fill="none"
+          stroke-width="1"
+          stroke-linejoin="round"
+          opacity=".52"
+        />
+      </svg>
+    </button>
+    <main class="main">
       <div class="main-container">
         <div class="main-header">
-          <h1 class="title-h1">Projects</h1>
+          <div>
+            <h1 class="title-h1">Projects</h1>
+            <span class="info-about-projects-txt"
+              >Overview of all projects and key metrics</span
+            >
+          </div>
           <div class="main-header-right-part">
-            <label for="main-search"> </label>
-            <input
-              id="main-search"
-              type="text"
-              placeholder="Search company or project..."
-            />
+            <button class="btn-filter btn-filter-projects visible">
+              Filter
+            </button>
+            <button class="btn-filter btn-filter-employees">Filter</button>
             <button class="btn-add btn-add-project visible">
               + Add Project
             </button>
@@ -114,35 +161,107 @@
         </div>
         <div class="main-statistic">
           <div class="card-statistic">
-            <p class="card-statistic-txt">Total Estimated Income</p>
-            <span class="card-statistic-total-income-span"></span>
-            <span class="bench-payment-span"></span>
+            <span class="card-icon"></span>
+            <div>
+              <p class="card-statistic-txt">Total Estimated Income</p>
+              <span class="card-statistic-total-income-span"></span>
+            </div>
           </div>
           <div class="card-statistic">
-            <p class="card-statistic-txt">Total Budget</p>
-            <span class="card-statistic-total-budget-span"></span>
+            <span class="card-icon"></span>
+            <div>
+              <p class="card-statistic-txt">Bench Payment</p>
+              <span class="bench-payment-span negative-value"></span>
+            </div>
           </div>
           <div class="card-statistic">
-            <p class="card-statistic-txt">Projects</p>
-            <span class="card-statistic-total-projects-span"></span>
+            <span class="card-icon"></span>
+            <div>
+              <p class="card-statistic-txt">Projects</p>
+              <span class="card-statistic-total-projects-span"></span>
+            </div>
           </div>
           <div class="card-statistic">
-            <p class="card-statistic-txt">Employees</p>
-            <span class="card-statistic-total-employees-span"></span>
+            <span class="card-icon"></span>
+            <div>
+              <p class="card-statistic-txt">Employees</p>
+              <span class="card-statistic-total-employees-span"></span>
+            </div>
           </div>
         </div>
+        <form class="form-search form-search-projects" action="#">
+          <div class="container-inputs-search">
+            <div class="row-search" data-field="company-name">
+              <label for="company-name-search"></label>
+              <input
+                id="company-name-search"
+                type="text"
+                placeholder="Company Name"
+              />
+            </div>
+            <div class="row-search" data-field="project-name">
+              <label for="project-name-search"></label>
+              <input
+                id="project-name-search"
+                type="text"
+                placeholder="Project Name"
+              />
+            </div>
+          </div>
+          <div class="chips"></div>
+          <div class="btn-container-search">
+            <button type="submit" class="btn-apply">Apply</button>
+            <button class="btn-cancel-search">Cancel</button>
+          </div>
+        </form>
+        <form class="form-search form-search-employees" action="#">
+          <div class="container-inputs-search">
+            <div class="row-search" data-field="name">
+              <label for="name-search"></label>
+              <input id="name-search" type="text" placeholder="Name" />
+            </div>
+            <div class="row-search" data-field="surname">
+              <label for="surname-search"></label>
+              <input id="surname-search" type="text" placeholder="Surname" />
+            </div>
+            <div class="row-search" data-field="position">
+              <select name="position-search" id="position-search">
+                <option value="" selected>All Positions</option>
+                <option value="Junior">Junior</option>
+                <option value="Middle">Middle</option>
+                <option value="Senior">Senior</option>
+                <option value="Lead">Lead</option>
+                <option value="Architect">Architect</option>
+                <option value="BO">BO</option>
+              </select>
+            </div>
+            <div class="row-search" data-field="projects">
+              <label for="projects-search"></label>
+              <input id="projects-search" type="text" placeholder="Projects" />
+            </div>
+          </div>
+          <div class="chips"></div>
+          <div class="btn-container-search">
+            <button type="submit" class="btn-apply">Apply</button>
+            <button class="btn-cancel-search">Cancel</button>
+          </div>
+        </form>
         <table class="main-table main-table-projects active">
           <thead class="thead-projects">
             <tr>
-              <th class="sortable" data-sort="companyName">Company Name</th>
-              <th class="sortable" data-sort="projectName">Project name</th>
-              <th class="sortable" data-sort="budget">Budget</th>
+              <th class="sortable" data-sort="companyName">
+                <span>Company Name</span>
+              </th>
+              <th class="sortable" data-sort="projectName">
+                <span>Project name</span>
+              </th>
+              <th class="sortable" data-sort="budget"><span>Budget</span></th>
               <th class="sortable" data-sort="employeeCapacity">
-                Employee Capacity
+                <span> Employee Capacity</span>
               </th>
               <th>Employees</th>
               <th class="sortable" data-sort="estimatedIncome">
-                Estimated Income
+                <span>Estimated Income</span>
               </th>
               <th>Action</th>
             </tr>
@@ -151,16 +270,18 @@
         </table>
         <table class="main-table main-table-employees">
           <thead class="thead-employees">
-            <th class="sortable" data-sort="name">Name</th>
-            <th class="sortable" data-sort="surname">Surname</th>
-            <th class="sortable" data-sort="age">Age</th>
-            <th class="sortable" data-sort="position">Position</th>
-            <th class="sortable" data-sort="salary">Salary</th>
+            <th class="sortable" data-sort="name"><span>Name</span></th>
+            <th class="sortable" data-sort="surname"><span>Surname</span></th>
+            <th class="sortable" data-sort="age"><span>Age</span></th>
+            <th class="sortable" data-sort="position"><span>Position</span></th>
+            <th class="sortable" data-sort="salary"><span>Salary</span></th>
             <th class="sortable" data-sort="estimatedPayment">
-              Estimated payment
+              <span>Estimated payment</span>
             </th>
             <th>Project</th>
-            <th class="sortable" data-sort="projectIncome">Project income</th>
+            <th class="sortable" data-sort="projectIncome">
+              <span>Project income</span>
+            </th>
             <th>Action</th>
           </thead>
           <tbody class="tbody-employees"></tbody>
@@ -177,7 +298,7 @@
               type="text"
               required
               minlength="3"
-              pattern="[A-Za-z0-9]+"
+              pattern="^(?=(?:[^a-zA-Z0-9]*[a-zA-Z0-9]){3,})[a-zA-Z0-9\s]+$"
               placeholder=" "
             />
             <span class="form-error"
@@ -192,7 +313,7 @@
               type="text"
               required
               minlength="2"
-              pattern="[A-Za-z0-9]+"
+              pattern="^(?=(?:[^a-zA-Z0-9]*[a-zA-Z0-9]){3,})[a-zA-Z0-9\s]+$"
               placeholder=" "
             />
             <span class="form-error"
@@ -405,16 +526,15 @@
     </div>
 
     <!-- Modal Show Assogn -->
-
     <div class="modal-overlay" id="show-assign-modal-overlay">
       <div
         class="modal-content show-assign-modal-content"
         id="show-assign-modal"
       >
         <div class="show-modal-header">
-          <div>
-            Assignments for <span class="show-modal-header-span"></span>
-          </div>
+          <p>
+            Assignments for <span class="show-modal-header-span accent"></span>
+          </p>
           <button class="btn-close-modal btn-close-modal-show-assign"></button>
         </div>
         <div class="modal-body modal-body-show-assign">
@@ -437,12 +557,13 @@
       </div>
     </div>
 
-    <!-- Modal show Employees -->
-
+    <!-- Modal Show Employees -->
     <div class="modal-overlay" id="show-emp-modal-overlay">
       <div class="modal-content show-emp-modal-content" id="show-emp-modal">
         <div class="show-modal-header">
-          <div>Employees on <span class="show-modal-header-span"></span></div>
+          <p>
+            Employees on <span class="show-modal-header-span accent"></span>
+          </p>
           <button class="btn-close-modal btn-close-modal-show-assign"></button>
         </div>
         <div class="modal-body modal-body-show-emp">
@@ -466,13 +587,12 @@
     </div>
 
     <!-- Modal Edit Assign -->
-
     <div class="modal-overlay" id="show-edit-modal-overlay">
       <div class="modal-content show-edit-modal-content" id="show-emp-modal">
         <div class="show-modal-header">
-          <div>Edit Assignments</div>
+          <p>Edit Assignments</p>
         </div>
-        <p class="show-modal-header-span p-edit-modal"></p>
+        <p class="show-modal-header-span p-edit-modal accent"></p>
         <div class="modal-body modal-body-show-edit">
           <div class="information-block-assign">
             <p><span>Max Total Capacity: </span><span>1.5</span></p>
@@ -521,7 +641,6 @@
     </div>
 
     <!-- Modal unAssign Assign -->
-
     <div class="modal-overlay" id="show-unassign-modal-overlay">
       <div
         class="modal-content show-unassign-modal-content"
@@ -560,14 +679,6 @@
             <span>Capacity After Unassignment:</span>
             <span class="capacity-after-unassignment-span"></span>
           </div>
-          <div class="body-unassign-row">
-            <span>Project Income Now:</span>
-            <span class="project-income-now-span"></span>
-          </div>
-          <div class="body-unassign-row">
-            <span>Project Income After:</span>
-            <span class="project-income-after-span"></span>
-          </div>
         </div>
         <div class="modal-footer">
           <button class="btn-close-modal btn-close-modal-assign">Cancel</button>
@@ -577,17 +688,16 @@
     </div>
 
     <!-- Modal Seed data -->
-
     <div class="modal-overlay" id="seed-data-modal-overlay">
       <div class="modal-content seed-data-modal-content" id="seed-data-modal">
         <div class="show-modal-header">
-          <div>Seed Data from Month</div>
+          <p>Seed Data from Month</p>
           <button class="btn-close-modal btn-close-modal-show-assign"></button>
         </div>
         <div class="modal-body modal-body-seed-data">
           <p class="info-user-select-month-tx">
             Select a month to copy its data to the current month (<span
-              class="data-txt-span accent"
+              class="data-txt-span orange"
               >April 2026</span
             >):
           </p>
@@ -611,7 +721,6 @@
     </div>
 
     <!-- Modal Vacations -->
-
     <div class="modal-overlay" id="modal-overlay-vacations">
       <div
         class="modal-content vacations-data-modal-content"
@@ -644,8 +753,8 @@
           <div class="modal-vacations-footer">
             <p>Vcations day:</p>
             <span class="vacations-txt-span"></span>
-            <button class="btn-set-vacations">Set vacations</button>
           </div>
+          <button class="btn-set-vacations">Set vacations</button>
         </div>
       </div>
     </div>

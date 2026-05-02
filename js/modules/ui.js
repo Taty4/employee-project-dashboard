@@ -21,6 +21,7 @@ export function updateUIProjects(projects) {
 
   projects.forEach((project) => {
     const data = calculateBudgetProject(project, getDate());
+    const numberOfAssignments = data.numberOfAssignments;
 
     const newStroke = document.createElement("tr");
     for (let i = 0; i < 7; i++) {
@@ -38,7 +39,10 @@ export function updateUIProjects(projects) {
           const btnShowEmp = document.createElement("button");
           btnShowEmp.className = "btn-action btn-show-emp";
           btnShowEmp.dataset.id = project.id;
-          btnShowEmp.textContent = "Show Emploeyees";
+          btnShowEmp.textContent =
+            numberOfAssignments === 0
+              ? "Show Emploeyees"
+              : `Show Emploeyees (${numberOfAssignments})`;
           newCell.append(btnShowEmp);
         }
       } else if (i === 5) {
@@ -68,6 +72,8 @@ export function updateUIEmployees(employees) {
 
   if (employees.length === 0) {
     tableEmployeesBody.replaceChildren();
+    totalIncome = 0;
+    benchPayment = 0;
     return;
   }
 
@@ -129,13 +135,16 @@ export function updateUIEmployees(employees) {
         newCell.append(span, input);
       } else if (i === 5) {
         newCell.textContent = `$${data.estimatedPayment.toFixed(2)}`;
-      } else if (i === 6 && employee.assignments.length !== 0) {
-        const btnShowAssignments = document.createElement("button");
-        btnShowAssignments.dataset.id = employee.id;
-        btnShowAssignments.className = "btn-action btn-show-assign";
-        btnShowAssignments.textContent = "Show Assignments";
-
-        newCell.append(btnShowAssignments);
+      } else if (i === 6) {
+        if (employee.assignments.length !== 0) {
+          const btnShowAssignments = document.createElement("button");
+          btnShowAssignments.dataset.id = employee.id;
+          btnShowAssignments.className = "btn-action btn-show-assign";
+          btnShowAssignments.textContent = `Assignments (${employee.assignments.length})`;
+          newCell.append(btnShowAssignments);
+        } else {
+          newCell.textContent = "-";
+        }
       } else if (i === 7) {
         if (data.projectedIncome < 0) {
           newCell.className = "negative-value";
@@ -196,7 +205,7 @@ export function updateUIModalAssign(employee) {
   if (projects.length !== 0) {
     for (let i = 0; i < projects.length; i++) {
       const option = document.createElement("option");
-      option.textContent = projects[i].projectName;
+      option.textContent = `${projects[i].projectName} (${projects[i].companyName})`;
       option.value = projects[i].id;
       selectProject.append(option);
     }
@@ -259,6 +268,8 @@ export function updateShowAssignModal(employee, modal) {
       } else if (i === 6) {
         td.textContent = `$${cost.toFixed(2)}`;
       } else if (i === 7) {
+        td.classList.add("negative-value");
+        td.classList.toggle("positive-value", profit >= 0);
         td.textContent = `$${profit.toFixed(2)}`;
       } else if (i === 8) {
         const btnEdit = document.createElement("button");
@@ -348,6 +359,8 @@ export function updateShowEmpModal(project, modal) {
         } else if (i === 6) {
           td.textContent = `$${cost.toFixed()}`;
         } else if (i === 7) {
+          td.classList.add("negative-value");
+          td.classList.toggle("positive-value", profit >= 0);
           td.textContent = `$${profit.toFixed(2)}`;
         } else if (i === 8) {
           const btnEdit = document.createElement("button");
@@ -378,7 +391,6 @@ export function updateModalEditAssign(employee, project, modal) {
     `${employee.name} ${employee.surname} on ${project.projectName}`;
 
   const capacity = calculationOfCapacity(employee, project.id);
-  console.log(capacity.currentCapacityEmployee);
   modal.querySelector(".other-projects-capacity-value").textContent =
     `${(1.5 - +capacity.availableForSelectionCapacity).toFixed(2)}`;
 
@@ -391,15 +403,13 @@ export function updateTotalStatistic() {
     ".card-statistic-total-income-span",
   );
 
-  const cardTotalBudget = document.querySelector(
-    ".card-statistic-total-budget-span",
-  );
   const cardTotalProjects = document.querySelector(
     ".card-statistic-total-projects-span",
   );
   const cardTotalEmployees = document.querySelector(
     ".card-statistic-total-employees-span",
   );
+  const cardBenchPayment = document.querySelector(".bench-payment-span");
 
   let totalProjects = 0;
   let totalEmployees = 0;
@@ -411,22 +421,15 @@ export function updateTotalStatistic() {
     totalIncome = 0;
   }
 
-  if (totalIncome < 0) {
-    cardTotalIncome.classList.add("negative-value");
-    cardTotalIncome.classList.remove("positive-value");
-  } else if (totalIncome > 0) {
-    cardTotalIncome.classList.remove("negative-value");
-    cardTotalIncome.classList.add("positive-value");
-  } else {
-    cardTotalIncome.classList.remove("positive-value");
-    cardTotalIncome.classList.remove("negative-value");
-  }
+  cardTotalIncome.classList.toggle("negative-value", totalIncome < 0);
+  cardTotalIncome.classList.toggle("positive-value", totalIncome > 0);
+
+  cardBenchPayment.classList.toggle("positive-value", benchPayment <= 0);
 
   cardTotalIncome.textContent = `$${totalIncome.toFixed(2)}`;
   cardTotalProjects.textContent = `${totalProjects}`;
   cardTotalEmployees.textContent = `${totalEmployees}`;
-  document.querySelector(".bench-payment-span").textContent =
-    `(Bench payment $${benchPayment.toFixed(2)})`;
+  cardBenchPayment.textContent = `$${benchPayment.toFixed(2)}`;
 }
 
 // Modal unAssign
@@ -489,8 +492,6 @@ export function updateModalUnAssign(employee, project, modal) {
     `${currentProjectCapacity.toFixed(2)}`;
   modal.querySelector(".capacity-after-unassignment-span").textContent =
     `${capacityAfterUnAssign.toFixed(2)}`;
-  modal.querySelector(".project-income-now-span").textContent = "Hello";
-  modal.querySelector(".project-income-after-span").textContent = "Hello";
 }
 
 export function updateModalSeedData() {
@@ -545,6 +546,8 @@ export function updateModalSeedData() {
       } else if (i === 3) {
         td.textContent = `${numberOfEmloyees}`;
       } else if (i === 4) {
+        td.classList.add("negative-value");
+        td.classList.toggle("positive-value", totalDateIncomming >= 0);
         td.textContent = `$${totalDateIncomming.toFixed(2)}`;
       } else if (i === 5) {
         const btnSeedData = document.createElement("button");
@@ -571,6 +574,7 @@ export function updateModalVacations(idEmployee) {
 
   const currentYear = +currentDate.slice(0, 4);
   const currentMonth = +currentDate.slice(5);
+  const currentDay = new Date().getDate();
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -610,6 +614,10 @@ export function updateModalVacations(idEmployee) {
       vacationWorkigDays++;
     }
 
+    if (i === currentDay) {
+      gridCell.classList.add("accent-green");
+    }
+
     gridCalendar.append(gridCell);
   }
 
@@ -636,10 +644,12 @@ export function formatVacationsDays(vacations, month) {
   for (let i = 1; i < sorted.length; i++) {
     if (sorted[i] !== sorted[i - 1] + 1) {
       if (start === sorted[i - 1]) {
-        ranges.push(`${String(start).padStart(2, "0")}.${month}`);
+        ranges.push(
+          `${String(start).padStart(2, "0")}.${String(month).padStart(2, "0")}`,
+        );
       } else {
         ranges.push(
-          `${String(start).padStart(2, "0")}.${month}-${String(sorted[i - 1]).padStart(2, "0")}.${month}`,
+          `${String(start).padStart(2, "0")}.${String(month).padStart(2, "0")}-${String(sorted[i - 1]).padStart(2, "0")}.${String(month).padStart(2, "0")}`,
         );
       }
       start = sorted[i];
@@ -647,10 +657,12 @@ export function formatVacationsDays(vacations, month) {
   }
 
   if (start === sorted[sorted.length - 1]) {
-    ranges.push(`${String(start).padStart(2, "0")}.${month}`);
+    ranges.push(
+      `${String(start).padStart(2, "0")}.${String(month).padStart(2, "0")}`,
+    );
   } else {
     ranges.push(
-      `${String(start).padStart(2, "0")}.${month}-${String(sorted[sorted.length - 1]).padStart(2, "0")}.${month}`,
+      `${String(start).padStart(2, "0")}.${String(month).padStart(2, "0")}-${String(sorted[sorted.length - 1]).padStart(2, "0")}.${String(month).padStart(2, "0")}`,
     );
   }
 

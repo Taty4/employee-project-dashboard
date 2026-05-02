@@ -78,9 +78,12 @@ class ManagerStore {
         employee.assignments = employee.assignments.filter(
           (assign) => assign.idProject !== id,
         );
-        console.log(employee.assignments);
       }
     });
+
+    if (date.projects.length === 0 && date.employees.length === 0) {
+      delete this.data[key];
+    }
 
     this.saveStore();
   }
@@ -103,6 +106,11 @@ class ManagerStore {
     if (!date) return;
 
     date.employees = date.employees.filter((employee) => employee.id !== id);
+
+    if (date.projects.length === 0 && date.employees.length === 0) {
+      delete this.data[key];
+    }
+
     this.saveStore();
   }
 
@@ -177,8 +185,8 @@ class ManagerStore {
     const currentDateProjects = store[currentKey].projects;
     const currentDateEmployees = store[currentKey].employees;
 
-    currentDateProjects.push(copyPrevProjects);
-    currentDateEmployees.push(copyPrevEmployees);
+    currentDateProjects.push(...copyPrevProjects);
+    currentDateEmployees.push(...copyPrevEmployees);
 
     this.saveStore();
   }
