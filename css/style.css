@@ -234,7 +234,8 @@ button:disabled {
   cursor: pointer;
 }
 
-.month-select option {
+.month-select option,
+.year-select option {
   color: var(--text-light);
   background-color: #004347;
 }
