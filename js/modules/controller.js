@@ -73,7 +73,6 @@ export function initController() {
     document.querySelector(".info-about-projects-txt").textContent =
       "Overview of all projects and key metrics";
     navEmployees.classList.remove("active");
-    rightSideBarEmployees.classList.remove("open");
     btnAddEmployee.classList.remove("visible");
     btnAddProject.classList.add("visible");
     title.textContent = "Projects";
@@ -89,7 +88,6 @@ export function initController() {
     navProjects.classList.remove("active");
     document.querySelector(".info-about-projects-txt").textContent =
       "Overview of all employees and key metrics";
-    rightSideBarProject.classList.remove("open");
     btnAddProject.classList.remove("visible");
     btnAddEmployee.classList.add("visible");
     title.textContent = "Employees";
@@ -536,12 +534,19 @@ export function initController() {
   // Cлушатели смены даты
   const inputSelectMonth = document.querySelector(".month-select");
   const inputSelectYear = document.querySelector(".year-select");
+  const currentDate =
+    JSON.parse(localStorage.getItem("currentDate")) || "2026-4";
+
+  inputSelectYear.value = currentDate.slice(0, 4);
+  inputSelectMonth.value = currentDate.slice(5);
 
   inputSelectMonth.addEventListener("change", () => {
+    localStorage.setItem("currentDate", JSON.stringify(getDate()));
     updateUI();
   });
 
   inputSelectYear.addEventListener("change", () => {
+    localStorage.setItem("currentDate", JSON.stringify(getDate()));
     updateUI();
   });
 
@@ -692,6 +697,29 @@ export function initController() {
     }
     if (event.target === showModalVacations) {
       closeModalVacations();
+    }
+    if (
+      !event.target.closest(".right-sidebar-projects") &&
+      event.target !== btnAddProject
+    ) {
+      rightSideBarProject.classList.remove("open");
+      formProject.reset();
+    }
+    if (
+      !event.target.closest(".right-sidebar-employees") &&
+      event.target !== btnAddEmployee
+    ) {
+      rightSideBarEmployees.classList.remove("open");
+      formEmployee.reset();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "Escape") {
+      rightSideBarProject.classList.remove("open");
+      rightSideBarEmployees.classList.remove("open");
+      formEmployee.reset();
+      formProject.reset();
     }
   });
 
@@ -1204,8 +1232,6 @@ export function initController() {
 
     updateUIEmployees(employees);
   });
-
-  // =================
 
   updateUI();
 }

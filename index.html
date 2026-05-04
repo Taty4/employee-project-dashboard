@@ -52,7 +52,7 @@
           <option value="1">February</option>
           <option value="2">March</option>
           <option value="3">April</option>
-          <option value="4" selected>May</option>
+          <option value="4">May</option>
           <option value="5">June</option>
           <option value="6">July</option>
           <option value="7">August</option>
@@ -301,8 +301,9 @@
               pattern="^(?=(?:[^a-zA-Z0-9]*[a-zA-Z0-9]){3,})[a-zA-Z0-9\s]+$"
               placeholder=" "
             />
-            <span class="form-error"
-              >Project name must be at least 3 characters</span
+            <span class="form-error">
+              The project name must be at least 3 characters and contain only
+              latin letters.</span
             >
           </div>
           <div class="form-field">
@@ -317,8 +318,9 @@
               placeholder=" "
             />
             <span class="form-error"
-              >Company name must be at least 2 characters</span
-            >
+              >Company name must be at least 2 characters and contain only latin
+              letters
+            </span>
           </div>
           <div class="form-field">
             <label for="project-budget">Budget: *</label>
@@ -377,7 +379,8 @@
               placeholder=" "
             />
             <span class="form-error"
-              >Name must be at least 3 characters and contain only letters</span
+              >Name must be at least 3 characters and contain only latin
+              letters</span
             >
           </div>
           <div class="form-field">
@@ -392,7 +395,7 @@
               placeholder=" "
             />
             <span class="form-error"
-              >Surname must be at least 3 characters and contain only
+              >Surname must be at least 3 characters and contain only latin
               letters</span
             >
           </div>
@@ -450,8 +453,6 @@
         </form>
       </div>
     </main>
-
-    <!-- Modal Assign -->
     <div class="modal-overlay" id="assign-modal-overlay">
       <div class="modal-content" id="assign-modal">
         <div class="modal-header">
@@ -524,8 +525,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal Show Assogn -->
     <div class="modal-overlay" id="show-assign-modal-overlay">
       <div
         class="modal-content show-assign-modal-content"
@@ -556,8 +555,6 @@
         <p class="no-assigments">No assignments for this employee.</p>
       </div>
     </div>
-
-    <!-- Modal Show Employees -->
     <div class="modal-overlay" id="show-emp-modal-overlay">
       <div class="modal-content show-emp-modal-content" id="show-emp-modal">
         <div class="show-modal-header">
@@ -585,8 +582,6 @@
         <p class="no-assigments">No employees assigned to this project.</p>
       </div>
     </div>
-
-    <!-- Modal Edit Assign -->
     <div class="modal-overlay" id="show-edit-modal-overlay">
       <div class="modal-content show-edit-modal-content" id="show-emp-modal">
         <div class="show-modal-header">
@@ -639,8 +634,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal unAssign Assign -->
     <div class="modal-overlay" id="show-unassign-modal-overlay">
       <div
         class="modal-content show-unassign-modal-content"
@@ -686,8 +679,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal Seed data -->
     <div class="modal-overlay" id="seed-data-modal-overlay">
       <div class="modal-content seed-data-modal-content" id="seed-data-modal">
         <div class="show-modal-header">
@@ -719,8 +710,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal Vacations -->
     <div class="modal-overlay" id="modal-overlay-vacations">
       <div
         class="modal-content vacations-data-modal-content"
